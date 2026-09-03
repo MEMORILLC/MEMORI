@@ -318,21 +318,6 @@
 		gap: 1.875rem;
 	}
 
-	.gallery-placeholder {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1rem;
-	}
-
-	.placeholder-card {
-		aspect-ratio: 1 / 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #eee;
-		color: #999;
-	}
-
 	.cta {
 		background: #111;
 		color: white;
