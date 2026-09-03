@@ -395,10 +395,6 @@
 			align-items: flex-start;
 		}
 
-		.gallery-placeholder {
-			grid-template-columns: 1fr;
-		}
-
 		.cta-inner {
 			padding: 5rem 1.125rem;
 		}
