@@ -30,27 +30,27 @@
 
 <style>
 	.gallery-page {
-		max-width: 1200px;
+		max-width: 75rem;
 		margin: 0 auto;
-		padding: 90px 24px;
+		padding: 5.625rem 1.5rem;
 	}
 
 	.page-header {
-		max-width: 700px;
-		margin-bottom: 60px;
+		max-width: 43.75rem;
+		margin-bottom: 3.75rem;
     position: relative;
 	}
 
 	.eyebrow {
-		margin: 0 0 16px;
-		font-size: 0.75rem;
+		margin: 0 0 1rem;
+		font-size: .75rem;
 		font-weight: 700;
 		letter-spacing: 0.15em;
 		color: #666;
 	}
 
 	h1 {
-		margin: 0 0 20px;
+		margin: 0 0 1.25rem;
 		font-size: clamp(3rem, 7vw, 5rem);
 		line-height: 1;
 		letter-spacing: -0.04em;
@@ -59,10 +59,10 @@
   h1::after {
     content: '';
     display: block;
-    width: 80px;
-    height: 4px;
-    margin-top: 24px;
-    border-radius: 999px;
+    width: 5rem;
+    height: .25rem;
+    margin-top: 1.5rem;
+    border-radius: 62.4375rem;
     background: var(--accent-gradient);
   }
 
@@ -73,13 +73,13 @@
 		color: #666;
 	}
 
-	@media (max-width: 700px) {
+	@media (max-width: 43.75rem) {
 		.gallery-page {
-			padding: 65px 18px;
+			padding: 4.0625rem 1.125rem;
 		}
 
 		.page-header {
-			margin-bottom: 40px;
+			margin-bottom: 2.5rem;
 		}
 	}
 </style>

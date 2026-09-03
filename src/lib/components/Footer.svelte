@@ -21,23 +21,23 @@
 
 <style>
 	.site-footer {
-		margin-top: 80px;
+		margin-top: 5rem;
 		background: #111;
 		color: white;
 	}
 
 	.footer-inner {
-		max-width: 1200px;
+		max-width: 75rem;
 		margin: 0 auto;
-		padding: 50px 24px;
+		padding: 3.125rem 1.5rem;
 
 		display: flex;
 		justify-content: space-between;
-		gap: 40px;
+		gap: 2.5rem;
 	}
 
   .company-name {
-    margin: 0 0 8px;
+    margin: 0 0 .5rem;
     font-size: 1.2rem;
     font-weight: 700;
 
@@ -54,7 +54,7 @@
 
 	.footer-links {
 		display: flex;
-		gap: 24px;
+		gap: 1.5rem;
 	}
 
 	.footer-links a {
@@ -70,26 +70,26 @@
   }
 
 	.copyright {
-		border-top: 1px solid #333;
-		padding: 20px 24px;
+		border-top: .0625rem solid #333;
+		padding: 1.25rem 1.5rem;
 		text-align: center;
 		color: #888;
-		font-size: 0.85rem;
+		font-size: .85rem;
 	}
 
-	@media (max-width: 700px) {
+	@media (max-width: 43.75rem) {
 		.footer-inner {
 			flex-direction: column;
-			padding: 40px 18px;
+			padding: 2.5rem 1.125rem;
 		}
 
 		.footer-links {
 			flex-direction: column;
-			gap: 12px;
+			gap: .75rem;
 		}
 
 		.copyright {
-			padding: 20px 18px;
+			padding: 1.25rem 1.125rem;
 		}
 	}
 </style>

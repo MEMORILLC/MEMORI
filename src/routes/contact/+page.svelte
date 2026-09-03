@@ -79,8 +79,14 @@
 								name="name"
 								type="text"
 								placeholder="Your name"
+								autocomplete="name"
+								aria-describedby="Name-error" 
+  							aria-invalid="true" 
 								required
 							/>
+							<span id="Name-error" class="error-msg">
+								Error: Please enter your name.
+							</span>
 						</div>
 
 						<div class="field">
@@ -90,8 +96,32 @@
 								name="email"
 								type="email"
 								placeholder="you@example.com"
+								autocomplete="email"
+								aria-describedby="Email-error" 
+								aria-invalid="true"
 								required
 							/>
+							<span id="Email-error" class="error-msg">
+								Error: Please enter a valid email address.
+							</span>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="field">
+							<label for="address">Address</label>
+							<input
+								id="address"
+								name="address"
+								type="text"
+								placeholder="Your address"
+								aria-describedby="Address-error"
+								aria-invalid="true"
+								required
+							/>
+							<span id="Address-error" class="error-msg">
+								Error: Please enter your address.
+							</span>
 						</div>
 					</div>
 
@@ -103,7 +133,14 @@
 								name="phone"
 								type="tel"
 								placeholder="(555) 555-5555"
+								autocomplete="tel"
+								aria-describedby="Phone-error"
+								aria-invalid="true"
+								required
 							/>
+							<span id="Phone-error" class="error-msg">
+								Error: Please enter a valid phone number.
+							</span>
 						</div>
 
 						<div class="field">
@@ -147,27 +184,27 @@
 
 <style>
 	.contact-page {
-		max-width: 1200px;
+		max-width: 75rem;
 		margin: 0 auto;
-		padding: 90px 24px;
+		padding: 5.625rem 1.5rem;
 	}
 
 	.contact-header {
-		max-width: 700px;
-		margin-bottom: 70px;
+		max-width: 43.75rem;
+		margin-bottom: 4.375rem;
     position: relative;
 	}
 
 	.eyebrow {
-		margin: 0 0 16px;
-		font-size: 0.75rem;
+		margin: 0 0 1rem;
+		font-size: .75rem;
 		font-weight: 700;
 		letter-spacing: 0.15em;
 		color: #666;
 	}
 
 	h1 {
-		margin: 0 0 20px;
+		margin: 0 0 1.25rem;
 		font-size: clamp(3rem, 7vw, 5rem);
 		line-height: 1;
 		letter-spacing: -0.04em;
@@ -176,10 +213,10 @@
   h1::after {
     content: '';
     display: block;
-    width: 80px;
-    height: 4px;
-    margin-top: 24px;
-    border-radius: 999px;
+    width: 5rem;
+    height: .25rem;
+    margin-top: 1.5rem;
+    border-radius: 62.4375rem;
     background: var(--accent-gradient);
   }
 
@@ -193,35 +230,35 @@
 	.contact-layout {
 		display: grid;
 		grid-template-columns: 0.8fr 1.5fr;
-		gap: 80px;
+		gap: 5rem;
 		align-items: start;
 	}
 
 	.contact-info {
-		padding-top: 10px;
+		padding-top: .625rem;
 	}
 
 	.contact-info h2 {
-		margin: 0 0 16px;
+		margin: 0 0 1rem;
 		font-size: 2rem;
 		letter-spacing: -0.02em;
 	}
 
 	.contact-info > p {
-		margin: 0 0 45px;
+		margin: 0 0 2.8125rem;
 		color: #666;
 		line-height: 1.7;
 	}
 
 	.info-item {
-		padding: 20px 0;
-		border-top: 1px solid #e5e5e5;
+		padding: 1.25rem 0;
+		border-top: .0625rem solid #e5e5e5;
 	}
 
 	.info-item span {
 		display: block;
-		margin-bottom: 6px;
-		font-size: 0.75rem;
+		margin-bottom: .375rem;
+		font-size: .75rem;
 		font-weight: 700;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
@@ -234,30 +271,30 @@
 	}
 
 	.form-wrapper {
-		padding: 40px;
+		padding: 2.5rem;
 		background: #f7f7f7;
 	}
 
 	form {
 		display: flex;
 		flex-direction: column;
-		gap: 24px;
+		gap: 1.5rem;
 	}
 
 	.form-row {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 20px;
+		gap: 1.25rem;
 	}
 
 	.field {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: .5rem;
 	}
 
 	label {
-		font-size: 0.9rem;
+		font-size: .9rem;
 		font-weight: 600;
 	}
 
@@ -265,10 +302,10 @@
 	select,
 	textarea {
 		width: 100%;
-		border: 1px solid #d5d5d5;
+		border: .0625rem solid #d5d5d5;
 		background: white;
-		padding: 14px 15px;
-		border-radius: 2px;
+		padding: .875rem .9375rem;
+		border-radius: .125rem;
 		outline: none;
 		transition:
 			border-color 0.2s ease,
@@ -279,12 +316,12 @@
 	select:focus,
 	textarea:focus {
 		border-color: #111;
-		box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+		box-shadow: 0 0 0 .125rem rgba(0, 0, 0, 0.08);
 	}
 
 	textarea {
 		resize: vertical;
-		min-height: 160px;
+		min-height: 10rem;
 	}
 
 	.submit-button,
@@ -293,7 +330,7 @@
     border: none;
     background: var(--accent-gradient);
     color: white;
-    padding: 15px 26px;
+    padding: .9375rem 1.625rem;
     font-weight: 600;
     cursor: pointer;
 
@@ -309,14 +346,14 @@
 	}
 
 	.success-message {
-		padding: 40px 20px;
+		padding: 2.5rem 1.25rem;
 		text-align: center;
 	}
 
 	.success-icon {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 20px;
+    width: 3.125rem;
+    height: 3.125rem;
+    margin: 0 auto 1.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -327,13 +364,13 @@
   }
 
 	.success-message h2 {
-		margin: 0 0 10px;
+		margin: 0 0 .625rem;
 		font-size: 1.8rem;
 	}
 
 	.success-message p {
-		max-width: 450px;
-		margin: 0 auto 25px;
+		max-width: 28.125rem;
+		margin: 0 auto 1.5625rem;
 		color: #666;
 		line-height: 1.6;
 	}
@@ -342,24 +379,24 @@
 		align-self: auto;
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 50rem) {
 		.contact-layout {
 			grid-template-columns: 1fr;
-			gap: 50px;
+			gap: 3.125rem;
 		}
 
 		.contact-header {
-			margin-bottom: 50px;
+			margin-bottom: 3.125rem;
 		}
 	}
 
-	@media (max-width: 600px) {
+	@media (max-width: 37.5rem) {
 		.contact-page {
-			padding: 65px 18px;
+			padding: 4.0625rem 1.125rem;
 		}
 
 		.form-wrapper {
-			padding: 25px 20px;
+			padding: 1.5625rem 1.25rem;
 		}
 
 		.form-row {

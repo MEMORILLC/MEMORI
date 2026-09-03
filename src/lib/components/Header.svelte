@@ -1,5 +1,6 @@
 <script lang="ts">
 	let menuOpen = $state(false);
+	import { site } from '$lib/data/site';
 
 	function closeMenu() {
 		menuOpen = false;
@@ -28,6 +29,14 @@
 			<a href="/" onclick={closeMenu}>Home</a>
 			<a href="/gallery" onclick={closeMenu}>Gallery</a>
 			<a href="/contact" onclick={closeMenu}>Contact</a>
+			{#if site.social}
+				{#each Object.entries(site.social) as [name, { url, component, props }]}
+				{@const Component = component}
+					<a href={url} target="_blank" rel="noopener noreferrer" onclick={closeMenu}>
+						<Component {...props} />
+					</a>
+				{/each}
+			{/if}
 		</nav>
 	</div>
 </header>
@@ -38,14 +47,14 @@
 		top: 0;
 		z-index: 100;
 		background: white;
-		border-bottom: 1px solid #e5e5e5;
+		border-bottom: .0625rem solid #e5e5e5;
 	}
 
 	.header-inner {
-		max-width: 1200px;
+		max-width: 75rem;
 		margin: 0 auto;
-		padding: 0 24px;
-		height: 76px;
+		padding: 0 1.5rem;
+		height: 4.75rem;
 
 		display: flex;
 		align-items: center;
@@ -67,13 +76,13 @@
 	nav {
 		display: flex;
 		align-items: center;
-		gap: 32px;
+		gap: 2rem;
 	}
 
 	nav a {
 		color: #333;
 		text-decoration: none;
-		font-size: 0.95rem;
+		font-size: .95rem;
 		font-weight: 500;
 	}
 
@@ -88,22 +97,22 @@
 		display: none;
 		border: none;
 		background: none;
-		padding: 8px;
+		padding: .5rem;
 		cursor: pointer;
 	}
 
 	.menu-button span {
 		display: block;
-		width: 24px;
-		height: 2px;
+		width: 1.5rem;
+		height: .125rem;
 		background: #111;
-		margin: 5px 0;
+		margin: .3125rem 0;
 	}
 
-	@media (max-width: 700px) {
+	@media (max-width: 43.75rem) {
 		.header-inner {
-			height: 68px;
-			padding: 0 18px;
+			height: 4.25rem;
+			padding: 0 1.125rem;
 		}
 
 		.menu-button {
@@ -113,7 +122,7 @@
 		nav {
 			display: none;
 			position: absolute;
-			top: 68px;
+			top: 4.25rem;
 			left: 0;
 			right: 0;
 
@@ -122,7 +131,7 @@
 			gap: 0;
 
 			background: white;
-			border-bottom: 1px solid #e5e5e5;
+			border-bottom: .0625rem solid #e5e5e5;
 		}
 
 		nav.open {
@@ -130,8 +139,8 @@
 		}
 
 		nav a {
-			padding: 18px 24px;
-			border-top: 1px solid #eee;
+			padding: 1.125rem 1.5rem;
+			border-top: .0625rem solid #eee;
 		}
 	}
 </style>

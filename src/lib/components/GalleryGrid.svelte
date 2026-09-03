@@ -22,7 +22,7 @@
 			onclick={() => openImage(item)}
 			aria-label={`View ${item.title}`}
 		>
-			<img src={item.image} alt={item.title} loading="lazy" />
+			<img src={item.image} alt={item.alt} loading="lazy" />
 
 			<div class="overlay">
 				<span>{item.title}</span>
@@ -43,7 +43,7 @@
 				×
 			</button>
 
-			<img src={selectedItem.image} alt={selectedItem.title} />
+			<img src={selectedItem.image} alt={selectedItem.alt} />
 
 			<div class="lightbox-info">
 				<h2>{selectedItem.title}</h2>
@@ -60,7 +60,7 @@
 	.gallery-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 20px;
+		gap: 1.25rem;
 	}
 
 	.gallery-item {
@@ -91,7 +91,7 @@
 		inset: 0;
 		display: flex;
 		align-items: flex-end;
-		padding: 24px;
+		padding: 1.5rem;
 
 		background: linear-gradient(
 			transparent 45%,
@@ -121,13 +121,13 @@
 		align-items: center;
 		justify-content: center;
 
-		padding: 30px;
+		padding: 1.875rem;
 		background: rgba(0, 0, 0, 0.9);
 	}
 
 	.lightbox-content {
 		position: relative;
-		width: min(1000px, 100%);
+		width: min(62.5rem, 100%);
 		max-height: 90vh;
 		display: flex;
 		flex-direction: column;
@@ -142,7 +142,7 @@
 
 	.close-button {
 		position: absolute;
-		top: -45px;
+		top: -2.8125rem;
 		right: 0;
 
 		border: none;
@@ -156,13 +156,13 @@
 
 	.lightbox-info {
 		width: 100%;
-		padding-top: 20px;
+		padding-top: 1.25rem;
 		color: white;
 		text-align: center;
 	}
 
 	.lightbox-info h2 {
-		margin: 0 0 8px;
+		margin: 0 0 .5rem;
 		font-size: 1.4rem;
 	}
 
@@ -171,18 +171,18 @@
 		color: #ccc;
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 50rem) {
 		.gallery-grid {
 			grid-template-columns: repeat(2, 1fr);
-			gap: 12px;
+			gap: .75rem;
 		}
 
 		.lightbox {
-			padding: 20px;
+			padding: 1.25rem;
 		}
 	}
 
-	@media (max-width: 500px) {
+	@media (max-width: 31.25rem) {
 		.gallery-grid {
 			grid-template-columns: 1fr;
 		}
