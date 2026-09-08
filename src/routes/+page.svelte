@@ -48,8 +48,8 @@
 		</p>
 
 		<div class="hero-buttons">
-			<a href="/gallery" class="button primary">View Our Products</a>
-			<a href="/contact" class="button secondary">Contact Us</a>
+			<a href="{base}/gallery" class="button primary">View Our Products</a>
+			<a href="{base}/contact" class="button secondary">Contact Us</a>
 		</div>
 	</div>
 </section>
@@ -75,7 +75,7 @@
 				option, we're here to help.
 			</p>
 
-			<a href="/contact" class="text-link">Get in touch →</a>
+			<a href="{base}/contact" class="text-link">Get in touch →</a>
 		</div>
 	</div>
 </section>
@@ -112,7 +112,7 @@
 				<h2>Take a look at what we offer.</h2>
 			</div>
 
-			<a href="/gallery" class="text-link">View full gallery →</a>
+			<a href="{base}/gallery" class="text-link">View full gallery →</a>
 		</div>
 
 		<GalleryGrid items={gallery} />
@@ -130,7 +130,7 @@
 			Get in touch with us and we'll be happy to help.
 		</p>
 
-		<a href="/contact" class="button primary">Contact Us</a>
+		<a href="{base}/contact" class="button primary">Contact Us</a>
 	</div>
 </section>
 
