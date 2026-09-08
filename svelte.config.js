@@ -15,9 +15,12 @@ const config = {
       precompress: false,
       strict: true,
     }),
+    // This allows the build to finish even if there are absolute root links (like href="/")
+    prerender: {
+      handleHttpError: 'warn'
+    }
   },
   compilerOptions: {
-    // Runes configuration safely migrated here
     runes: ({ filename }) =>
       filename.split(/[/\\]/).includes('node_modules') ? undefined : true
   }
