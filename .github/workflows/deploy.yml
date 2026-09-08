@@ -39,7 +39,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./pages # Changed from ./build to match adapter-static default
+          path: ./build # Uses SvelteKit's default static adapter output directory
 
   deploy:
     environment:
