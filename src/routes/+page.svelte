@@ -2,7 +2,7 @@
   import { site } from "$lib/data/site";
   import GalleryGrid from "$lib/components/GalleryGrid.svelte";
   import { gallery } from "$lib/data/gallery";
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
 
   const services = [
     {
@@ -20,12 +20,6 @@
       description:
         "We take pride in the quality of our work and the products we provide.",
     },
-  ];
-
-  const _galleryPreview = [
-    "/gallery/1.jpg",
-    "/gallery/2.jpg",
-    "/gallery/3.jpg",
   ];
 </script>
 
@@ -49,8 +43,8 @@
     </p>
 
     <div class="hero-buttons">
-      <a href="{base}/gallery" class="button primary">View Our Products</a>
-      <a href="{base}/contact" class="button secondary">Contact Us</a>
+      <a href={resolve("/gallery")} class="button primary">View Our Products</a>
+      <a href={resolve("/contact")} class="button secondary">Contact Us</a>
     </div>
   </div>
 </section>
@@ -76,7 +70,7 @@
         here to help.
       </p>
 
-      <a href="{base}/contact" class="text-link">Get in touch →</a>
+      <a href={resolve("/contact")} class="text-link">Get in touch →</a>
     </div>
   </div>
 </section>
@@ -113,7 +107,7 @@
         <h2>Take a look at what we offer.</h2>
       </div>
 
-      <a href="{base}/gallery" class="text-link">View full gallery →</a>
+      <a href={resolve("/gallery")} class="text-link">View full gallery →</a>
     </div>
 
     <GalleryGrid items={gallery} />
@@ -129,7 +123,7 @@
 
     <p>Get in touch with us and we'll be happy to help.</p>
 
-    <a href="{base}/contact" class="button primary">Contact Us</a>
+    <a href={resolve("/contact")} class="button primary">Contact Us</a>
   </div>
 </section>
 

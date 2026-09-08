@@ -1,7 +1,7 @@
 <script lang="ts">
   let menuOpen = $state(false);
   import { site } from "$lib/data/site";
-  import { base } from "$app/paths";
+  import { resolve } from "$app/paths";
 
   function closeMenu() {
     menuOpen = false;
@@ -10,7 +10,7 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <a href="{base}/" class="logo" onclick={closeMenu}> MEMORI </a>
+    <a href={resolve("/")} class="logo" onclick={closeMenu}> MEMORI </a>
 
     <button
       class="menu-button"
@@ -25,9 +25,9 @@
     </button>
 
     <nav class:open={menuOpen}>
-      <a href="{base}/" onclick={closeMenu}>Home</a>
-      <a href="{base}/gallery" onclick={closeMenu}>Gallery</a>
-      <a href="{base}/contact" onclick={closeMenu}>Contact</a>
+      <a href={resolve("/")} onclick={closeMenu}>Home</a>
+      <a href={resolve("/gallery")} onclick={closeMenu}>Gallery</a>
+      <a href={resolve("/contact")} onclick={closeMenu}>Contact</a>
       {#if site.social}
         {#each Object.entries(site.social) as [_name, { url, component, props }] (_name)}
           {@const Component = component}

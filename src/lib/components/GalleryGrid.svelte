@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { GalleryItem } from "$lib/data/gallery";
-  import { base } from "$app/paths";
+  import { asset } from "$app/paths";
 
   let { items }: { items: GalleryItem[] } = $props();
 
@@ -23,7 +23,7 @@
       onclick={() => openImage(item)}
       aria-label={`View ${item.title}`}
     >
-      <img src="{base}{item.image}" alt={item.alt} loading="lazy" />
+      <img src={asset(item.image)} alt={item.alt} loading="lazy" />
 
       <div class="overlay">
         <span>{item.title}</span>
@@ -44,7 +44,7 @@
         ×
       </button>
 
-      <img src="{base}{selectedItem.image}" alt={selectedItem.alt} />
+      <img src={asset(selectedItem.image)} alt={selectedItem.alt} />
 
       <div class="lightbox-info">
         <h2>{selectedItem.title}</h2>
