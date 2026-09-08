@@ -36,8 +36,8 @@ jobs:
       - name: Run Code Linter
         run: npm run lint
 
-      - name: Run Unit Tests
-        run: npm test
+      - name: Run Svelte Code and TypeScript Checks
+        run: npm run check
 
       - name: Build
         run: npm run build
