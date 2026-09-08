@@ -4,7 +4,7 @@ import adapter from "@sveltejs/adapter-static";
 const config = {
   kit: {
     paths: {
-      base: ".MEMORI",
+      base: "/MEMORI",
     },
 
     adapter: adapter({
