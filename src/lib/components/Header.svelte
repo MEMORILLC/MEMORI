@@ -1,6 +1,7 @@
 <script lang="ts">
 	let menuOpen = $state(false);
 	import { site } from '$lib/data/site';
+	import { base } from '$app/paths';
 
 	function closeMenu() {
 		menuOpen = false;
@@ -26,9 +27,9 @@
 		</button>
 
 		<nav class:open={menuOpen}>
-			<a href="/" onclick={closeMenu}>Home</a>
-			<a href="/gallery" onclick={closeMenu}>Gallery</a>
-			<a href="/contact" onclick={closeMenu}>Contact</a>
+			<a href="{base}/" onclick={closeMenu}>Home</a>
+			<a href="{base}/gallery" onclick={closeMenu}>Gallery</a>
+			<a href="{base}/contact" onclick={closeMenu}>Contact</a>
 			{#if site.social}
 				{#each Object.entries(site.social) as [name, { url, component, props }]}
 				{@const Component = component}
