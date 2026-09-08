@@ -2,6 +2,7 @@
 	import { site } from '$lib/data/site';
 	import GalleryGrid from '$lib/components/GalleryGrid.svelte';
 	import { gallery } from '$lib/data/gallery';
+	import { base } from '$apps/paths';
 
 	const services = [
 		{
