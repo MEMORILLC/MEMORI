@@ -25,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps
 
       - name: Run accessibility tests
         run: npx playwright test

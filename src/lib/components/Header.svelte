@@ -10,7 +10,7 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <a href={resolve("/")} class="logo" onclick={closeMenu}> MEMORI </a>
+    <a href={resolve("/")} aria-label="Home" class="logo" onclick={closeMenu}> MEMORI </a>
 
     <button
       class="menu-button"
@@ -25,14 +25,15 @@
     </button>
 
     <nav class:open={menuOpen}>
-      <a href={resolve("/")} onclick={closeMenu}>Home</a>
-      <a href={resolve("/gallery")} onclick={closeMenu}>Gallery</a>
-      <a href={resolve("/contact")} onclick={closeMenu}>Contact</a>
+      <a href={resolve("/")} aria-label="Home" onclick={closeMenu}>Home</a>
+      <a href={resolve("/gallery")} aria-label="Gallery" onclick={closeMenu}>Gallery</a>
+      <a href={resolve("/contact")} aria-label="Contact" onclick={closeMenu}>Contact</a>
       {#if site.social}
         {#each Object.entries(site.social) as [_name, { url, component, props }] (_name)}
           {@const Component = component}
           <a
             href={url}
+            aria-label="Picture"
             target="_blank"
             rel="noopener noreferrer"
             onclick={closeMenu}

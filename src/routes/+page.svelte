@@ -43,8 +43,8 @@
     </p>
 
     <div class="hero-buttons">
-      <a href={resolve("/gallery")} class="button primary">View Our Products</a>
-      <a href={resolve("/contact")} class="button secondary">Contact Us</a>
+      <a href={resolve("/gallery")} class="button primary" aria-label="View Our Products">View Our Products</a>
+      <a href={resolve("/contact")} class="button secondary" aria-label="Contact Us">Contact Us</a>
     </div>
   </div>
 </section>
@@ -70,7 +70,7 @@
         here to help.
       </p>
 
-      <a href={resolve("/contact")} class="text-link">Get in touch →</a>
+      <a href={resolve("/contact")} class="text-link" aria-label="Get in touch">Get in touch →</a>
     </div>
   </div>
 </section>
@@ -107,7 +107,7 @@
         <h2>Take a look at what we offer.</h2>
       </div>
 
-      <a href={resolve("/gallery")} class="text-link">View full gallery →</a>
+      <a href={resolve("/gallery")} class="text-link" aria-label="View full gallery">View full gallery →</a>
     </div>
 
     <GalleryGrid items={gallery} />
@@ -123,7 +123,7 @@
 
     <p>Get in touch with us and we'll be happy to help.</p>
 
-    <a href={resolve("/contact")} class="button primary">Contact Us</a>
+    <a href={resolve("/contact")} class="button primary" aria-label="Contact Us">Contact Us</a>
   </div>
 </section>
 
@@ -286,7 +286,7 @@
   .feature-number {
     margin-bottom: 2.1875rem;
     font-size: 0.8rem;
-    color: #777;
+    color: #616161;
   }
 
   .feature h3 {

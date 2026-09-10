@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 const pages = [
-	{ name: 'Home', path: '/' },
-	{ name: 'Gallery', path: '/gallery' },
-	{ name: 'Contact', path: '/contact' },
+	{ name: 'Home', path: '/MEMORI/' },
+	{ name: 'Gallery', path: '/MEMORI/gallery' },
+	{ name: 'Contact', path: '/MEMORI/contact' },
 ];
 
 for (const { name, path } of pages) {
@@ -29,9 +29,10 @@ for (const { name, path } of pages) {
 
 		expect(results.violations).toEqual([]);
 	});
+}
 
-  test('Contact form has no accessibility violations', async ({ page }) => {
-    await page.goto('/contact');
+test('Contact form has no accessibility violations', async ({ page }) => {
+    await page.goto('/MEMORI/contact');
 
     await page.getByRole('heading', { name: /contact/i }).waitFor();
 
@@ -46,4 +47,3 @@ for (const { name, path } of pages) {
 
     expect(results.violations).toEqual([]);
   });
-}

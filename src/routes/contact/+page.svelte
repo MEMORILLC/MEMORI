@@ -80,8 +80,8 @@
 								type="text"
 								placeholder="Your name"
 								autocomplete="name"
-								aria-describedby="Name-error" 
-  							aria-invalid="true" 
+								aria-describedby="Name-error"
+  							aria-invalid="true"
 								required
 							/>
 							<span id="Name-error" class="error-msg">
@@ -97,7 +97,7 @@
 								type="email"
 								placeholder="you@example.com"
 								autocomplete="email"
-								aria-describedby="Email-error" 
+								aria-describedby="Email-error"
 								aria-invalid="true"
 								required
 							/>
@@ -262,7 +262,7 @@
 		font-weight: 700;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		color: #888;
+		color: #707070;
 	}
 
 	.info-item p {
