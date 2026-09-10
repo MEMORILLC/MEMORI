@@ -5,11 +5,11 @@ export default defineConfig({
 
 	fullyParallel: true,
 
-	forbidOnly: !!process.env.CI,
+	forbidOnly: false,
 
-	retries: process.env.CI ? 2 : 0,
+	retries: 0,
 
-	workers: process.env.CI ? 1 : undefined,
+	workers: undefined,
 
 	reporter: 'html',
 
@@ -19,9 +19,9 @@ export default defineConfig({
 	},
 
 	webServer: {
-		command: 'npm run build && npm run preview',
+		command: 'npm run build && npm run preview -- --host 127.0.0.1',
 		url: 'http://127.0.0.1:4173/MEMORI/',
-		reuseExistingServer: !process.env.CI,
+		reuseExistingServer: true,
 		timeout: 120000,
 	},
 
