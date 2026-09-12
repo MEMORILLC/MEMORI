@@ -43,8 +43,11 @@
       >
         ×
       </button>
-
-      <img src={asset(selectedItem.image)} alt={selectedItem.alt} />
+      
+      <picture>
+        <source srcset={asset(selectedItem.image.replace(/\.(png|jpe?g)$/i, ".webp"))} type="image/webp" />
+        <img src={asset(selectedItem.image)} alt={selectedItem.alt} />
+      </picture>
 
       <div class="lightbox-info">
         <h2>{selectedItem.title}</h2>
