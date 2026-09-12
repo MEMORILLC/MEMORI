@@ -49,7 +49,7 @@ jobs:
         run: |
           echo "Starting WebP conversion in the build directory..."
           # Locates and loops through all png, jpg, and jpeg assets inside SvelteKit's static output folder
-          find ./build -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r img; do
+          find ./build -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) ! -name "memori_logo.png" | while read -r img; do
             echo "Converting: $img"
             cwebp -q 85 "$img" -o "${img%.*}.webp"
             rm "$img" # Deletes original asset so you don't host duplicates or heavy files
