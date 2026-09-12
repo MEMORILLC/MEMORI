@@ -16,6 +16,8 @@
   let touchStartY = $state(0);
   let currentTranslateX = $state(0);
   let isDragging = $state(false);
+  let isAnimating = $state(false); // Prevents overlapping track actions
+  let targetSlideOffset = $state(0); // Tracks animation destinations (-1, 0, 1)
 
   // VIRTUAL TRACK SPACING BOUNDS
   const GAP_REM = 2; // Matches the 2rem gap defined in CSS
@@ -27,6 +29,7 @@
   function openImage(item: GalleryItem) {
     selectedItem = item;
     currentIndex = items.findIndex(i => i.image === item.image);
+    targetSlideOffset = 0; // Reset structural offset for new selection
   }
 
   function closeImage() {
@@ -34,23 +37,33 @@
     currentIndex = -1;
     isZoomed = false;
     currentTranslateX = 0;
+    targetSlideOffset = 0; // Reset structural offset when closing
   }
 
   function navigate(direction: 'next' | 'prev') {
-    if (currentIndex === -1) return;
+    if (currentIndex === -1 || isAnimating) return;
     isZoomed = false;
+    isAnimating = true;
+
+    targetSlideOffset = direction === 'next' ? 1 : -1; // Set the target offset for animation
     currentTranslateX = 0; // Seamlessly clear structural offset limits
 
-    if (direction === 'next') {
-      currentIndex = nextIndex;
-    } else {
-      currentIndex = prevIndex;
-    }
-    selectedItem = items[currentIndex];
+    setTimeout(() => {
+      if (direction === 'next') {
+        currentIndex = nextIndex;
+      } else {
+        currentIndex = prevIndex;
+      }
+      selectedItem = items[currentIndex];
+
+      // 3. Reset the track parameters back to center zero invisibly
+      targetSlideOffset = 0;
+      isAnimating = false;
+    }, 400); // Matches the 0.4s transition defined in your <style>
   }
 
   function handleKeyDown(event: KeyboardEvent) {
-    if (currentIndex === -1) return;
+    if (currentIndex === -1 || isAnimating) return;
     if (event.key === "ArrowRight") navigate("next");
     else if (event.key === "ArrowLeft") navigate("prev");
     else if (event.key === "Escape") closeImage();
@@ -69,6 +82,7 @@
 
   // MULTI-INPUT START SELECTION (Handles mouse and touch drags universally)
   function handleDragStart(clientX: number, clientY: number) {
+    if (isAnimating) return; // Prevents initiating drag during active transitions
     isDragging = true;
     touchStartX = clientX;
     touchStartY = clientY;
@@ -110,6 +124,7 @@
 
   function handleImageClick(event: MouseEvent) {
     event.stopPropagation();
+    if (isAnimating) return; // Prevents zoom toggling during active transitions
     if (isZoomed) {
       isZoomed = false;
       currentTranslateX = 0;
@@ -172,7 +187,7 @@
         <div 
           class="slider-track" 
           class:dragging={isDragging}
-          style="transform: translateX(calc(-100% - {GAP_REM}rem + {currentTranslateX}px));"
+          style="transform: translateX(calc((-100% - {targetSlideOffset * 100}%) - {GAP_REM + (targetSlideOffset * GAP_REM)}rem + {currentTranslateX}px));"
         >
           <!-- Left Slide Panel (Always holds previous item) -->
           <div class="slide-wrapper">
