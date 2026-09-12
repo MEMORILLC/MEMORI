@@ -30,6 +30,9 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Install webp tools
+        run: sudo apt-get update && sudo apt-get install webp -y
+
       - name: Install dependencies
         run: npm ci
 
@@ -41,6 +44,16 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Convert build images to WebP
+        run: |
+          echo "Starting WebP conversion in the build directory..."
+          # Locates and loops through all png, jpg, and jpeg assets inside SvelteKit's static output folder
+          find ./build -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r img; do
+            echo "Converting: $img"
+            cwebp -q 85 "$img" -o "${img%.*}.webp"
+            rm "$img" # Deletes original asset so you don't host duplicates or heavy files
+          done
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
