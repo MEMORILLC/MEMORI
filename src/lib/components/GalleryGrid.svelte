@@ -1,5 +1,4 @@
 <script lang="ts">
-  /* eslint-env browser */
   import type { GalleryItem } from "$lib/data/gallery";
   import Image from "$lib/components/Image.svelte";
 
