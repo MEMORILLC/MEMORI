@@ -38,7 +38,6 @@
 	.page-header {
 		max-width: 43.75rem;
 		margin-bottom: 3.75rem;
-    position: relative;
 	}
 
 	.eyebrow {

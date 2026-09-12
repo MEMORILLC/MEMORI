@@ -47,10 +47,14 @@
       <a href={resolve("/contact")} class="button secondary" aria-label="Contact Us">Contact Us</a>
     </div>
   </div>
+
+  <a class="scroll-cue" href="#about" aria-label="Continue to About Us">
+    <span aria-hidden="true">↓</span>
+  </a>
 </section>
 
 <!-- ABOUT -->
-<section class="section about">
+<section class="section about" id="about">
   <div class="section-inner about-grid">
     <div>
       <p class="eyebrow">ABOUT US</p>
@@ -73,6 +77,7 @@
       <a href={resolve("/contact")} class="text-link" aria-label="Get in touch">Get in touch →</a>
     </div>
   </div>
+
 </section>
 
 <!-- SERVICES / FEATURES -->
@@ -96,6 +101,7 @@
       {/each}
     </div>
   </div>
+
 </section>
 
 <!-- GALLERY PREVIEW -->
@@ -112,6 +118,7 @@
 
     <GalleryGrid items={gallery} />
   </div>
+
 </section>
 
 <!-- CTA -->
@@ -124,11 +131,13 @@
     <p>Get in touch with us and we'll be happy to help.</p>
 
     <a href={resolve("/contact")} class="button primary" aria-label="Contact Us">Contact Us</a>
+
   </div>
 </section>
 
 <style>
   .hero {
+    position: relative;
     min-height: 40.625rem;
     display: flex;
     align-items: center;
@@ -180,6 +189,42 @@
     gap: 0.875rem;
     margin-top: 2.1875rem;
   }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 0.0625rem solid #ccc;
+    color: #111;
+    text-decoration: none;
+    transform: translateX(-50%);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .scroll-cue span {
+    font-size: 1.35rem;
+    line-height: 1;
+    animation: scroll-cue-bob 1.8s ease-in-out infinite;
+  }
+
+  .scroll-cue:hover {
+    background: white;
+    transform: translate(-50%, -0.2rem);
+  }
+
+  @keyframes scroll-cue-bob {
+    0%, 100% { transform: translateY(-0.15rem); }
+    50% { transform: translateY(0.15rem); }
+  }
+
+  #about {
+    scroll-margin-top: 4.75rem;
+  }
+
 
   .button {
     display: inline-block;
