@@ -23,7 +23,10 @@
       onclick={() => openImage(item)}
       aria-label={`View ${item.title}`}
     >
-      <img src={asset(item.image)} alt={item.alt} loading="lazy" />
+      <picture>
+        <source srcset={asset(item.image.replace(/\.(png|jpe?g)$/i, ".webp"))} type="image/webp" />
+        <img src={asset(item.image)} alt={item.alt} loading="lazy" />
+      </picture>
 
       <div class="overlay">
         <span>{item.title}</span>
