@@ -1,4 +1,5 @@
 <script lang="ts">
+  /* eslint-env browser */
   import type { GalleryItem } from "$lib/data/gallery";
   import Image from "$lib/components/Image.svelte";
 
@@ -6,16 +7,23 @@
   let selectedItem: GalleryItem | null = $state(null);
   let currentIndex = $state(-1);
   
-  // ZOOM STATES
+  // ZOOM PARAMETERS
   let isZoomed = $state(false);
   let zoomX = $state(50);
   let zoomY = $state(50);
 
-  // DRAG TRACK STATES
+  // REAL-TIME DRAG & TRACK SPACING PARAMETERS
   let touchStartX = $state(0);
   let touchStartY = $state(0);
   let currentTranslateX = $state(0);
   let isDragging = $state(false);
+
+  // VIRTUAL TRACK SPACING BOUNDS
+  const GAP_REM = 2; // Matches the 2rem gap defined in CSS
+
+  // Derived indices for a clean 3-panel infinite slide track
+  let prevIndex = $derived(currentIndex !== -1 ? (currentIndex - 1 + items.length) % items.length : -1);
+  let nextIndex = $derived(currentIndex !== -1 ? (currentIndex + 1) % items.length : -1);
 
   function openImage(item: GalleryItem) {
     selectedItem = item;
@@ -32,12 +40,12 @@
   function navigate(direction: 'next' | 'prev') {
     if (currentIndex === -1) return;
     isZoomed = false;
-    currentTranslateX = 0; // Clear the track offset seamlessly
+    currentTranslateX = 0; // Seamlessly clear structural offset limits
 
     if (direction === 'next') {
-      currentIndex = (currentIndex + 1) % items.length;
+      currentIndex = nextIndex;
     } else {
-      currentIndex = (currentIndex - 1 + items.length) % items.length;
+      currentIndex = prevIndex;
     }
     selectedItem = items[currentIndex];
   }
@@ -49,46 +57,55 @@
     else if (event.key === "Escape") closeImage();
   }
 
-  // SWIPE ENGINE WITH MULTI-IMAGE SLIDE TRACKING
-  function handleTouchStart(event: TouchEvent) {
-    isDragging = true;
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
+  // DESKTOP CURSOR ZOOM & PAN ENGINE
+  function handleMouseMove(event: MouseEvent) {
+    if (!isZoomed) return;
+    const container = event.currentTarget as HTMLDivElement;
+    const rect = container.getBoundingClientRect();
+    
+    // Calculates percentage tracking point dynamically relative to mouse speed vectors
+    zoomX = ((event.clientX - rect.left) / rect.width) * 100;
+    zoomY = ((event.clientY - rect.top) / rect.height) * 100;
   }
 
-  function handleTouchMove(event: TouchEvent) {
+  // MULTI-INPUT START SELECTION (Handles mouse and touch drags universally)
+  function handleDragStart(clientX: number, clientY: number) {
+    isDragging = true;
+    touchStartX = clientX;
+    touchStartY = clientY;
+  }
+
+  function handleDragMove(clientX: number, clientY: number, event: TouchEvent | MouseEvent) {
     if (!isDragging || currentIndex === -1) return;
 
-    const currentX = event.touches[0].clientX;
-    const currentY = event.touches[0].clientY;
-    const deltaX = currentX - touchStartX;
-    const deltaY = currentY - touchStartY;
+    const deltaX = clientX - touchStartX;
+    const deltaY = clientY - touchStartY;
 
     if (isZoomed) {
       if (event.cancelable) event.preventDefault();
-      // Smooth internal panning inside magnified view
+      
+      // DESKTOP & MOBILE INTEGRATED PANNING (Adjusting active center offsets)
       zoomX = Math.max(0, Math.min(100, zoomX - (deltaX / window.innerWidth) * 45));
       zoomY = Math.max(0, Math.min(100, zoomY - (deltaY / window.innerHeight) * 45));
-      touchStartX = currentX;
-      touchStartY = currentY;
+      touchStartX = clientX;
+      touchStartY = clientY;
     } else {
-      // Moves the entire multi-image horizontal track dynamically under the finger
       currentTranslateX = deltaX;
     }
   }
 
-  function handleTouchEnd() {
+  function handleDragEnd() {
     isDragging = false;
     if (isZoomed) return;
 
-    const swipeThreshold = window.innerWidth * 0.2; // 20% of screen width triggers a flip
+    const swipeThreshold = window.innerWidth * 0.18; // 18% viewport change bounds
     
     if (currentTranslateX < -swipeThreshold) {
       navigate("next");
     } else if (currentTranslateX > swipeThreshold) {
       navigate("prev");
     } else {
-      currentTranslateX = 0; // Return smoothly to center if let go early
+      currentTranslateX = 0; // Return smoothly to center if threshold isn't met
     }
   }
 
@@ -129,13 +146,21 @@
     role="presentation"
     onclick={closeImage}
     onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') closeImage(); }}
-    ontouchstart={handleTouchStart}
-    ontouchmove={handleTouchMove}
-    ontouchend={handleTouchEnd}
+    
+    ontouchstart={(e) => handleDragStart(e.touches[0].clientX, e.touches[0].clientY)}
+    ontouchmove={r => handleDragMove(r.touches[0].clientX, r.touches[0].clientY, r)}
+    ontouchend={handleDragEnd}
+    
+    onmousedown={(e) => { if(!isZoomed) handleDragStart(e.clientX, e.clientY); }}
+    onmousemove={(e) => { if(!isZoomed) handleDragMove(e.clientX, e.clientY, e); }}
+    onmouseup={() => { if(!isZoomed) handleDragEnd(); }}
+    onmouseleave={() => { if(!isZoomed) handleDragEnd(); }}
   >
     <div 
       class="lightbox-content" 
-      role="presentation" 
+      role="dialog" 
+      aria-modal="true"
+      tabindex="-1"
       onclick={(e) => e.stopPropagation()}
       onkeydown={(e) => e.stopPropagation()}
     >
@@ -143,28 +168,36 @@
 
       <button class="nav-button prev-button" type="button" aria-label="Previous image" onclick={(e) => { e.stopPropagation(); navigate('prev'); }}>‹</button>
 
-      <!-- The Window Layer: Clips adjacent row items out of view -->
       <div class="slider-window">
-        <!-- The Slider Track: Calculates horizontal multi-card layout spacing -->
+        <!-- 3-PANEL VIRTUAL INFINITE TRACK: Stays perfectly fluid and factors in gaps -->
         <div 
           class="slider-track" 
           class:dragging={isDragging}
-          style="transform: translateX(calc({currentIndex * -100}% + {currentTranslateX}px));"
+          style="transform: translateX(calc(-100% - {GAP_REM}rem + {currentTranslateX}px));"
         >
-          {#each items as item, index (index)}
-            <div class="slide-wrapper">
-              <!-- Render Zoom Layer exclusively over the actively targeted image layout -->
-              <div
-                class="zoom-container"
-                class:zoomed={isZoomed && index === currentIndex}
-                onclick={handleImageClick}
-                style="--zoom-x: {zoomX}%; --zoom-y: {zoomY}%;"
-                role="presentation"
-              >
-                <Image src={item.image} alt={item.alt} />
-              </div>
+          <!-- Left Slide Panel (Always holds previous item) -->
+          <div class="slide-wrapper">
+            <div class="zoom-container"><Image src={items[prevIndex].image} alt={items[prevIndex].alt} /></div>
+          </div>
+
+          <!-- Active Center Slide Panel -->
+          <div class="slide-wrapper">
+            <div
+              class="zoom-container"
+              class:zoomed={isZoomed}
+              onclick={handleImageClick}
+              onmousemove={handleMouseMove}
+              style="--zoom-x: {zoomX}%; --zoom-y: {zoomY}%;"
+              role="presentation"
+            >
+              <Image src={items[currentIndex].image} alt={items[currentIndex].alt} />
             </div>
-          {/each}
+          </div>
+
+          <!-- Right Slide Panel (Always holds next item) -->
+          <div class="slide-wrapper">
+            <div class="zoom-container"><Image src={items[nextIndex].image} alt={items[nextIndex].alt} /></div>
+          </div>
         </div>
       </div>
 
@@ -179,7 +212,7 @@
 {/if}
 
 <style>
-  /* [Keep your existing gallery-grid, close-button, nav-button overlays identical] */
+  /* [Keep your existing gallery-grid, overlay configurations completely identical] */
   .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
   .gallery-item { position: relative; display: block; width: 100%; padding: 0; border: none; background: #eee; cursor: pointer; overflow: hidden; aspect-ratio: 1 / 1; }
   .gallery-item :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
@@ -215,10 +248,9 @@
   .prev-button { left: -4.5rem; }
   .next-button { right: -4.5rem; }
 
-  /* NEW MULTI-IMAGE CAROUSEL LAYOUT STRUCTURING */
   .slider-window {
     width: 100%;
-    overflow: hidden; /* Clips out the neighboring images */
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -228,17 +260,18 @@
   .slider-track {
     display: flex;
     width: 100%;
-    /* Computes positions: index offset % + raw dragging pixel delta values */
+    /* FIX 3: Implements a clean 2rem spatial gap separation between images */
+    gap: 2rem; 
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: transform;
   }
 
   .slider-track.dragging {
-    transition: none; /* Disables timeline transition while tracking thumb drag directly */
+    transition: none;
   }
 
   .slide-wrapper {
-    flex: 0 0 100%; /* Ensures each image panel fills exactly 100% of the lightbox window width */
+    flex: 0 0 100%;
     width: 100%;
     display: flex;
     align-items: center;
@@ -264,21 +297,60 @@
     transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: transform, transform-origin;
   }
-
-  .zoom-container.zoomed {
+    
+  /* FIX 1: Activates the smooth cursor hover panning tracker across desktop screens */.zoom-container.zoomed {
     cursor: zoom-out;
   }
   
   .zoom-container.zoomed :global(img) {
-    transition: none;
-    transform: scale(2.2);
+    transition: transform 0.1s linear; /* Responsive tracking without visual rubber-banding */transform: scale(2.2);
+  }
+  
+  .lightbox-info {
+    width: 100%;
+    padding-top: 1.25rem;
+    color: white;
+    text-align: center;
+  }
+  
+  .lightbox-info h2 {
+    margin: 0 0 0.5rem; 
+    font-size: 1.4rem;
+  }
+  
+  .lightbox-info p {
+    margin: 0;
+    color: #ccc;
+  }
+  
+  @media (max-width: 72rem) {
+    .prev-button {
+      left: 1rem;
+    }
+    .next-button {
+      right: 1rem;
+    }
+  }
+  
+  @media (max-width: 50rem) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    .lightbox {
+      padding: 1.25rem;
+    }
+    .nav-button {
+      width: 2.75rem;
+      height: 2.75rem;
+      font-size: 2.25rem;
+    }
+  }
+  
+  @media (max-width: 31.25rem) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
-  .lightbox-info { width: 100%; padding-top: 1.25rem; color: white; text-align: center; }
-  .lightbox-info h2 { margin: 0 0 0.5rem; font-size: 1.4rem; }
-  .lightbox-info p { margin: 0; color: #ccc; }
-
-  @media (max-width: 72rem) { .prev-button { left: 1rem; } .next-button { right: 1rem; } }
-  @media (max-width: 50rem) { .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; } .lightbox { padding: 1.25rem; } .nav-button { width: 2.75rem; height: 2.75rem; font-size: 2.25rem; } }
-  @media (max-width: 31.25rem) { .gallery-grid { grid-template-columns: 1fr; } }
 </style>
