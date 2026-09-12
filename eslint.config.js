@@ -1,6 +1,7 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintPluginSvelte from "eslint-plugin-svelte";
+import globals from "globals";
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -10,6 +11,10 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         parser: tseslint.parser,
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node
       },
     },
     rules: {
