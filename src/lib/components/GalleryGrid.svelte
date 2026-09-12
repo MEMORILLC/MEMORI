@@ -8,6 +8,10 @@
   let zoomX = $state(0);
   let zoomY = $state(0);
 
+  let touchStartX = $state(0);
+  let touchEndX = $state(0);
+  const swipeThreshold = 50; // Minimum distance in pixels for a swipe to be registered
+
   function openImage(item: GalleryItem) {
     selectedItem = item;
   }
@@ -43,6 +47,32 @@
       navigate("prev");
     } else if (event.key === "Escape") {
       closeImage();
+    }
+  }
+
+  function handleTouchStart(event: TouchEvent) {
+    if (isZoomed) return; // Ignore swipes when zoomed in
+    touchStartX = event.touches[0].clientX;
+  }
+
+  function handleTouchMove(event: TouchEvent) {
+    if (isZoomed) return; // Ignore swipes when zoomed in
+    if (Math.abs(event.changedTouches[0].clientX - touchStartX) > 10) {
+      if (event.cancelable) {
+        event.preventDefault(); // Prevents scrolling when swiping
+      }
+    }
+  }
+
+  function handleTouchEnd(event: TouchEvent) {
+    if (isZoomed) return; // Ignore swipes when zoomed in
+    touchEndX = event.changedTouches[0].clientX;
+    const swipeDistance = touchEndX - touchStartX;
+
+    if (swipeDistance < -swipeThreshold) {
+      navigate("next");
+    } else if (swipeDistance > swipeThreshold) {
+      navigate("prev");
     }
   }
 
@@ -84,7 +114,15 @@
 </div>
 
 {#if selectedItem}
-  <div class="lightbox" role="presentation" onclick={closeImage} onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') closeImage(); }}>
+  <div
+    class="lightbox"
+    role="presentation"
+    onclick={closeImage}
+    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') closeImage(); }}
+    ontouchstart={handleTouchStart}
+    ontouchmove={handleTouchMove}
+    ontouchend={handleTouchEnd}
+  >
     <div 
       class="lightbox-content" 
       role="presentation" 
