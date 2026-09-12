@@ -2,7 +2,7 @@ import Icon from '@iconify/svelte';
 
 export const site = {
   companyName: 'Memori',
-  tagline: 'Quality products and personalized service.',
+  tagline: 'Made by your moments.',
   email: 'test@email.com',
   phone: '(555) 555-5555',
   social: {

@@ -165,7 +165,6 @@
     height: 0.25rem;
     margin-top: 1.5rem;
     border-radius: 62.4375rem;
-    background: var(--accent-gradient);
   }
 
   .hero-text {
@@ -192,10 +191,9 @@
   }
 
   .button.primary {
-    background: var(--accent-gradient);
-    background-size: 200% 100%;
-    background-position: 0% 50%;
-    transition: background-position 0.3s ease;
+		border: 0.0625rem solid #ccc;
+		background: white;
+    color: #111;
   }
 
   .button.primary:hover {

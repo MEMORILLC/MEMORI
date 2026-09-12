@@ -2,6 +2,7 @@
   let menuOpen = $state(false);
   import { site } from "$lib/data/site";
   import { resolve } from "$app/paths";
+  import Image from "$lib/components/Image.svelte";
 
   function closeMenu() {
     menuOpen = false;
@@ -10,7 +11,10 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <a href={resolve("/")} aria-label="Home" class="logo" onclick={closeMenu}> MEMORI </a>
+    <a href={resolve("/")} aria-label="Home" class="logo-group" onclick={closeMenu}>
+      <Image src="/logos/memori_camera.png" alt="Memori Logo" class="camera-logo" />
+      <span class="logo-text">MEMORI</span>
+    </a>
 
     <button
       class="menu-button"
@@ -66,8 +70,28 @@
     justify-content: space-between;
   }
 
-  .logo {
-    background: var(--accent-gradient);
+  .logo-group {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+  }
+
+  :global(.camera-logo) {
+    height: 2.25rem;
+    width: auto;
+    
+    /* Ensures the wide image fits completely without cropping any edges */
+    object-fit: contain; 
+    display: inline-block;
+    vertical-align: middle;
+
+    margin-right: 0.5rem;
+  }
+
+  .logo-text {
+    background: black;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -92,7 +116,7 @@
   }
 
   nav a:hover {
-    background: var(--accent-gradient);
+    background: grey;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
