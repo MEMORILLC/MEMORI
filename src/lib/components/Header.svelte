@@ -31,7 +31,7 @@
     <nav class:open={menuOpen}>
       <a href={resolve("/")} aria-label="Home" onclick={closeMenu}>Home</a>
       <a href={resolve("/gallery")} aria-label="Gallery" onclick={closeMenu}>Gallery</a>
-      <a href={resolve("/how-it-works")} aria-label="How it works" onClick={closeMenu}>How it works</a>
+      <a href={resolve("/how-it-works")} aria-label="How it works" onclick={closeMenu}>How it works</a>
       <a href={resolve("/contact")} aria-label="Contact" onclick={closeMenu}>Contact</a>
       {#if site.social}
         {#each Object.entries(site.social) as [_name, { url, component, props }] (_name)}
