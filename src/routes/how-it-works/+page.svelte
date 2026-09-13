@@ -223,10 +223,6 @@
   }
 
   /* --- PROMISE SECTION (CENTERED) --- */
-  .promise {
-    text-align: center;
-  }
-
   .promise-content {
     max-width: 700px;
     margin: 0 auto;
