@@ -36,7 +36,7 @@
   <div class="hero-content">
     <p class="eyebrow">WELCOME TO {site.companyName}</p>
 
-    <h1>Quality products.<br />Personalized service.</h1>
+    <h1>One of a kind<br />and uniquely yours.</h1>
 
     <p class="hero-text">
       {site.tagline}
