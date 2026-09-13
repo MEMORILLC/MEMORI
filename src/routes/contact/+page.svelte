@@ -1,29 +1,104 @@
 <script lang="ts">
 	const companyName = 'MEMORI';
 
+	// 1. Manage form state, individual field values, and errors using Svelte 5 Runes
 	let submitted = $state(false);
+	let isSubmitting = $state(false);
+	let submitError = $state<string | null>(null);
 
-	function handleSubmit() {
-		// We'll connect Web3Forms in the final step.
-		submitted = true;
+	let formData = $state({
+		name: '',
+		email: '',
+		address: '',
+		phone: '',
+		interest: '',
+		message: '',
+		botcheck: false // Honeypot field for spam prevention
+	});
+
+	let errors = $state<{ name?: string; email?: string }>({});
+
+	async function handleSubmit(event: SubmitEvent) {
+		event.preventDefault();
+
+		const form = event.currentTarget as HTMLFormElement;
+
+		if (!form.checkValidity()) {
+			form.reportValidity();
+			return;
+		}
+
+		isSubmitting = true;
+		submitError = null;
+		errors = {};
+
+		if (!formData.name.trim()) {
+			errors.name = 'Please enter your name.';
+		}
+
+		if (!formData.email.trim()) {
+			errors.email = 'Please enter your email address.';
+		}
+
+		if (Object.keys(errors).length > 0) {
+			isSubmitting = false;
+			return;
+		}
+
+		try {
+			// Submit to Web3Forms using fetch
+			const response = await fetch('https://api.web3forms.com/submit', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: JSON.stringify({
+					access_key: 'YOUR_ACCESS_KEY_HERE', // <-- Put your Web3Forms Access Key here
+					subject: `New Contact Form Submission - ${companyName}`,
+					// If a bot checks the box, formData.botcheck becomes true, triggering the spam filter
+					...formData 
+				})
+			});
+
+			const result = await response.json();
+
+			if (!response.ok || !result.success) {
+				throw new Error(result.message || 'Unable to submit the form.');
+			}
+			submitted = true;
+
+			formData = {
+				name: '',
+				email: '',
+				address: '',
+				phone: '',
+				interest: '',
+				message: '',
+				botcheck: false
+			};
+		} catch (err) {
+			console.error('Submission failed:', err);
+			// Save the error so a banner displays. formData is preserved!
+			submitError = 
+				err instanceof Error
+				? err.message
+				:	'We are unable to send your message. Please try sending again.';
+		} finally {
+			isSubmitting = false;
+		}
 	}
 </script>
 
 <svelte:head>
 	<title>Contact | {companyName}</title>
-
-	<meta
-		name="description"
-		content={`Get in touch with ${companyName}.`}
-	/>
+	<meta name="description" content={`Get in touch with ${companyName}.`} />
 </svelte:head>
 
 <section class="contact-page">
 	<div class="contact-header">
 		<p class="eyebrow">GET IN TOUCH</p>
-
 		<h1>Contact Us</h1>
-
 		<p>
 			Have a question, want more information, or interested in one of
 			our products? Send us a message and we'll get back to you.
@@ -33,11 +108,7 @@
 	<div class="contact-layout">
 		<div class="contact-info">
 			<h2>Let's talk.</h2>
-
-			<p>
-				Fill out the form and we'll respond by email as soon as
-				possible.
-			</p>
+			<p>Fill out the form and we'll respond by email as soon as possible.</p>
 
 			<div class="info-item">
 				<span>Email</span>
@@ -54,23 +125,35 @@
 			{#if submitted}
 				<div class="success-message">
 					<div class="success-icon">✓</div>
-
 					<h2>Thank you!</h2>
-
-					<p>
-						Your message has been submitted successfully. We'll
-						get back to you soon.
-					</p>
-
+					<p>Your message has been submitted successfully. We'll get back to you soon.</p>
 					<button type="button" onclick={() => (submitted = false)}>
 						Send another message
 					</button>
 				</div>
 			{:else}
-				<form onsubmit={(event) => {
-					event.preventDefault();
-					handleSubmit();
-				}}>
+				<form 
+					name="contact"
+					onsubmit={handleSubmit}
+				>
+
+					<input 
+						type="checkbox" 
+						name="botcheck" 
+						bind:checked={formData.botcheck} 
+						style="display: none !important;" 
+						tabindex="-1" 
+						autocomplete="off" 
+					/>
+					
+					<!-- Failure Recovery Banner -->
+					{#if submitError}
+						<div class="error-banner">
+							<p><strong>⚠️ Submission Failed</strong></p>
+							<p>{submitError}</p>
+						</div>
+					{/if}
+
 					<div class="form-row">
 						<div class="field">
 							<label for="name">Name *</label>
@@ -80,13 +163,14 @@
 								type="text"
 								placeholder="Your name"
 								autocomplete="name"
-								aria-describedby="Name-error"
-  							aria-invalid="true"
+								bind:value={formData.name}
+								aria-invalid={errors.name ? "true" : "false"}
+								aria-describedby={errors.name ? "name-error" : undefined}
 								required
 							/>
-							<span id="Name-error" class="error-msg">
-								Error: Please enter your name.
-							</span>
+							{#if errors.name}
+								<span id="name-error" class="error-msg">Error: {errors.name}</span>
+							{/if}
 						</div>
 
 						<div class="field">
@@ -97,13 +181,14 @@
 								type="email"
 								placeholder="you@example.com"
 								autocomplete="email"
-								aria-describedby="Email-error"
-								aria-invalid="true"
+								bind:value={formData.email}
+								aria-invalid={errors.email ? "true" : "false"}
+								aria-describedby={errors.email ? "email-error" : undefined}
 								required
 							/>
-							<span id="Email-error" class="error-msg">
-								Error: Please enter a valid email address.
-							</span>
+							{#if errors.email}
+								<span id="email-error" class="error-msg">Error: {errors.email}</span>
+							{/if}
 						</div>
 					</div>
 
@@ -113,15 +198,11 @@
 							<input
 								id="address"
 								name="address"
+								autocomplete="street-address"
 								type="text"
 								placeholder="Your address"
-								aria-describedby="Address-error"
-								aria-invalid="true"
-								required
+								bind:value={formData.address}
 							/>
-							<span id="Address-error" class="error-msg">
-								Error: Please enter your address.
-							</span>
 						</div>
 					</div>
 
@@ -134,28 +215,18 @@
 								type="tel"
 								placeholder="(555) 555-5555"
 								autocomplete="tel"
-								aria-describedby="Phone-error"
-								aria-invalid="true"
-								required
+								bind:value={formData.phone}
 							/>
-							<span id="Phone-error" class="error-msg">
-								Error: Please enter a valid phone number.
-							</span>
 						</div>
 
 						<div class="field">
 							<label for="interest">What are you interested in?</label>
-
-							<select id="interest" name="interest">
+							<select id="interest" name="interest" bind:value={formData.interest}>
 								<option value="">Select an option</option>
-								<option value="Product information">
-									Product information
-								</option>
+								<option value="Product information">Product information</option>
 								<option value="Pricing">Pricing</option>
 								<option value="Custom order">Custom order</option>
-								<option value="General question">
-									General question
-								</option>
+								<option value="General question">General question</option>
 								<option value="Other">Other</option>
 							</select>
 						</div>
@@ -163,18 +234,18 @@
 
 					<div class="field">
 						<label for="message">Message *</label>
-
 						<textarea
 							id="message"
-							name="message"
 							rows="7"
+							name="message"
 							placeholder="How can we help?"
+							bind:value={formData.message}
 							required
 						></textarea>
 					</div>
 
-					<button class="submit-button" type="submit">
-						Send Message
+					<button class="submit-button" type="submit" disabled={isSubmitting}>
+						{isSubmitting ? 'Sending...' : 'Send Message'}
 					</button>
 				</form>
 			{/if}
@@ -183,6 +254,7 @@
 </section>
 
 <style>
+	/* Existing styling blocks remain identical */
 	.contact-page {
 		max-width: 75rem;
 		margin: 0 auto;
@@ -217,7 +289,7 @@
     height: .25rem;
     margin-top: 1.5rem;
     border-radius: 62.4375rem;
-    background: var(--accent-gradient);
+    background: white;
   }
 
 	.contact-header > p:last-child {
@@ -325,24 +397,49 @@
 	}
 
 	.submit-button,
-  .success-message button {
-    align-self: flex-start;
-    border: none;
-    background: var(--accent-gradient);
-    color: white;
-    padding: .9375rem 1.625rem;
-    font-weight: 600;
-    cursor: pointer;
+	.success-message button {
+		align-self: flex-start;
+		border: none;
+		background: black;
+		color: white;
+		padding: .9375rem 1.625rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition:
+			background-color 0.2s ease,
+			transform 0.2s ease;
+	}
 
-    background-size: 200% 100%;
-    background-position: 0% 50%;
-
-    transition: background-position 0.3s ease;
-  }
-
-	.submit-button:hover,
+	.submit-button:hover:not(:disabled),
 	.success-message button:hover {
-		background-position: 100% 50%;
+		background: #333;
+	}
+
+	.submit-button:active:not(:disabled),
+	.success-message button:active {
+		transform: translateY(1px);
+	}
+
+	/* Style updates for loading dynamic buttons */
+	.submit-button:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+
+	/* Appended Failure styling properties */
+	.error-banner {
+		background: #fdf2f2;
+		border-left: 4px solid #de2a2a;
+		padding: 1rem;
+		color: #9b1c1c;
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	.error-msg {
+		font-size: 0.8rem;
+		color: #de2a2a;
+		font-weight: 500;
 	}
 
 	.success-message {
@@ -358,7 +455,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--accent-gradient);
+    background: black;
     color: white;
     font-size: 1.5rem;
   }
