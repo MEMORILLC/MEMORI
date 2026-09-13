@@ -78,25 +78,25 @@
 </section>
 
 <!-- QUALITY COMMITMENT SECTION -->
-<section class="section about-grid">
-  <div class="section-inner about-grid">
-    <div>
+<section class="section promise">
+  <div class="section-inner">
+    <div class="promise-content">
       <p class="eyebrow">OUR PROMISE</p>
       <h2>No shortcuts. Just pure quality.</h2>
-    </div>
 
-    <div class="about-text">
-      <p>
-        At {site.companyName}, we believe that a great final product is the natural result of
-        a transparent and honest workflow. We never cut corners or settle for "good enough."
-      </p>
+      <div class="promise-text">
+        <p>
+          At {site.companyName}, we believe that a great final product is the natural result of
+          a transparent and honest workflow. We never cut corners or settle for "good enough."
+        </p>
 
-      <p>
-        Throughout the journey, we keep you updated so you always know exactly where your
-        project stands. Experience a personalized service designed entirely around you.
-      </p>
+        <p>
+          Throughout the journey, we keep you updated so you always know exactly where your
+          project stands. Experience a personalized service designed entirely around you.
+        </p>
 
-      <a href={resolve("/gallery")} class="text-link" aria-label="View full gallery">See examples of our work →</a>
+        <a href={resolve("/gallery")} class="text-link" aria-label="View full gallery">See examples of our work →</a>
+      </div>
     </div>
   </div>
 </section>
@@ -222,29 +222,28 @@
     margin: 0;
   }
 
-  /* --- ABOUT/PROMISE GRID SPLIT --- */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: start;
+  /* --- PROMISE SECTION (CENTERED) --- */
+  .promise {
+    text-align: center;
   }
 
-  @media (min-width: 768px) {
-    .about-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-    }
+  .promise-content {
+    max-width: 700px;
+    margin: 0 auto;
   }
 
-  .about-text p {
+  .promise-content h2 {
+    margin-bottom: 2.5rem;
+  }
+
+  .promise-text p {
     font-size: 1.15rem;
     line-height: 1.6;
     color: var(--color-text-muted, #555);
     margin: 0 0 1.5rem 0;
   }
 
-  .about-text p:last-of-type {
+  .promise-text p:last-of-type {
     margin-bottom: 2.5rem;
   }
 
