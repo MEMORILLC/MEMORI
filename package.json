@@ -22,7 +22,7 @@
     "@playwright/test": "^1.63.0",
     "@sveltejs/adapter-auto": "^7.0.1",
     "@sveltejs/adapter-static": "^3.0.10",
-    "@sveltejs/kit": "^2.63.0",
+    "@sveltejs/kit": "^2.70.3",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
@@ -38,5 +38,11 @@
   "dependencies": {
     "@iconify-svelte/akar-icons": "^1.0.2",
     "@iconify-svelte/ant-design": "^1.0.6"
+  },
+  "overrides": {
+    "cookie": "0.7.0"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true
   }
 }
