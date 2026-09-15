@@ -308,15 +308,16 @@
   }
 
   .close-button {
-    position: absolute;
-    top: -2.8125rem;
-    right: 0;
+    position: fixed;
+    top: max(0.75rem, env(safe-area-inset-top));
+    right: max(0.75rem, env(safe-area-inset-right));
     border: none;
     background: none;
     color: white;
     font-size: 2.5rem;
     line-height: 1;
     cursor: pointer;
+    z-index: 1020;
   }
 
   .nav-button {
@@ -448,6 +449,13 @@
 
     .lightbox {
       padding: 1.25rem;
+    }
+
+    .close-button {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.6);
     }
 
     .nav-button {
