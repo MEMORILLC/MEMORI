@@ -59,7 +59,13 @@
 					access_key: 'YOUR_ACCESS_KEY_HERE', // <-- Put your Web3Forms Access Key here
 					subject: `New Contact Form Submission - ${site.companyName}`,
 					// If a bot checks the box, formData.botcheck becomes true, triggering the spam filter
-					...formData 
+					...formData,
+					...(formData.interest === 'Custom order'
+						? {}
+						: {
+								customOrderDate: undefined,
+								orderQuantity: undefined
+							})
 				})
 			});
 
