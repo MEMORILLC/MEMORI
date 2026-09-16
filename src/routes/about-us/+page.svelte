@@ -148,12 +148,6 @@
     line-height: 1.5;
   }
 
-  .hero-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
   .section {
     padding: 6rem 2rem;
   }
