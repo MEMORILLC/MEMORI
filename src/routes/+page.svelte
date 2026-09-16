@@ -43,7 +43,7 @@
     </p>
 
     <div class="hero-buttons">
-      <a href={resolve("/gallery")} class="button primary" aria-label="View Our Products">View Our Products</a>
+      <a href={resolve("/gallery")} class="button primary" aria-label="View Our Gallery">View Our Gallery</a>
       <a href={resolve("/contact")} class="button secondary" aria-label="Contact Us">Contact Us</a>
     </div>
   </div>
@@ -355,8 +355,8 @@
   }
 
   .cta {
-    background: #111;
-    color: white;
+    background: #f5f5f5;
+    color: black;
   }
 
   .cta-inner {

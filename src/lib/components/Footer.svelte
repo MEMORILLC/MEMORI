@@ -15,13 +15,12 @@
 	</div>
 
 	<div class="copyright">
-		© {new Date().getFullYear()} MEMORI. All rights reserved.
+		© {new Date().getFullYear()} MEMORI, LLC. All rights reserved.
 	</div>
 </footer>
 
 <style>
 	.site-footer {
-		margin-top: 5rem;
 		background: #111;
 		color: white;
 	}
@@ -41,7 +40,7 @@
     font-size: 1.2rem;
     font-weight: 700;
 
-    background: var(--accent-gradient);
+    background: white;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -63,7 +62,7 @@
 	}
 
 	.footer-links a:hover {
-    background: var(--accent-gradient);
+    background: white;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;

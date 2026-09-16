@@ -1,5 +1,5 @@
 <script lang="ts">
-	const companyName = 'MEMORI';
+	import { site } from '$lib/data/site';
 
 	// 1. Manage form state, individual field values, and errors using Svelte 5 Runes
 	let submitted = $state(false);
@@ -12,6 +12,8 @@
 		address: '',
 		phone: '',
 		interest: '',
+		customOrderDate: '',
+		orderQuantity: '',
 		message: '',
 		botcheck: false // Honeypot field for spam prevention
 	});
@@ -55,7 +57,7 @@
 				},
 				body: JSON.stringify({
 					access_key: 'YOUR_ACCESS_KEY_HERE', // <-- Put your Web3Forms Access Key here
-					subject: `New Contact Form Submission - ${companyName}`,
+					subject: `New Contact Form Submission - ${site.companyName}`,
 					// If a bot checks the box, formData.botcheck becomes true, triggering the spam filter
 					...formData 
 				})
@@ -74,6 +76,8 @@
 				address: '',
 				phone: '',
 				interest: '',
+				customOrderDate: '',
+				orderQuantity: '',
 				message: '',
 				botcheck: false
 			};
@@ -91,8 +95,8 @@
 </script>
 
 <svelte:head>
-	<title>Contact | {companyName}</title>
-	<meta name="description" content={`Get in touch with ${companyName}.`} />
+	<title>Contact | {site.companyName}</title>
+	<meta name="description" content={`Get in touch with ${site.companyName}.`} />
 </svelte:head>
 
 <section class="contact-page">
@@ -106,21 +110,6 @@
 	</div>
 
 	<div class="contact-layout">
-		<div class="contact-info">
-			<h2>Let's talk.</h2>
-			<p>Fill out the form and we'll respond by email as soon as possible.</p>
-
-			<div class="info-item">
-				<span>Email</span>
-				<p>your@email.com</p>
-			</div>
-
-			<div class="info-item">
-				<span>Phone</span>
-				<p>(555) 555-5555</p>
-			</div>
-		</div>
-
 		<div class="form-wrapper">
 			{#if submitted}
 				<div class="success-message">
@@ -194,54 +183,62 @@
 
 					<div class="form-row">
 						<div class="field">
-							<label for="address">Address</label>
-							<input
-								id="address"
-								name="address"
-								autocomplete="street-address"
-								type="text"
-								placeholder="Your address"
-								bind:value={formData.address}
-							/>
-						</div>
-					</div>
-
-					<div class="form-row">
-						<div class="field">
-							<label for="phone">Phone</label>
-							<input
-								id="phone"
-								name="phone"
-								type="tel"
-								placeholder="(555) 555-5555"
-								autocomplete="tel"
-								bind:value={formData.phone}
-							/>
-						</div>
-
-						<div class="field">
-							<label for="interest">What are you interested in?</label>
-							<select id="interest" name="interest" bind:value={formData.interest}>
-								<option value="">Select an option</option>
-								<option value="Product information">Product information</option>
-								<option value="Pricing">Pricing</option>
+							<label for="interest">What are you interested in? *</label>
+							<select
+								id="interest"
+								name="interest"
+								bind:value={formData.interest}
+								required
+							>
+								<option value="" disabled hidden>Select an option</option>
 								<option value="Custom order">Custom order</option>
 								<option value="General question">General question</option>
-								<option value="Other">Other</option>
 							</select>
 						</div>
 					</div>
 
 					<div class="field">
-						<label for="message">Message *</label>
-						<textarea
-							id="message"
-							rows="7"
-							name="message"
-							placeholder="How can we help?"
-							bind:value={formData.message}
-							required
-						></textarea>
+						{#if formData.interest === "Custom order"}
+							<label for="order-date">Estimated Fulfillment Date *</label>
+							<input
+								id="order-date"
+								name="customOrderDate"
+								type="date"
+								bind:value={formData.customOrderDate}
+								required={formData.interest === "Custom order"}
+							/>
+
+							<label for="order-quantity">Estimated Quantity *</label>
+							<input
+								id="order-quantity"
+								name="orderQuantity"
+								type="number"
+								placeholder="How many?"
+								bind:value={formData.orderQuantity}
+								required={formData.interest === "Custom order"}
+							/>
+
+							<label for="message">Tell us about your product. *</label>
+							<textarea
+								id="message"
+								rows="7"
+								name="message"
+								placeholder="Describe what you would like with as much detail as possible."
+								bind:value={formData.message}
+								required={formData.interest === "Custom order"}
+							></textarea>
+						{/if}
+						{#if formData.interest === "General question"}
+							<label for="message">Message *</label>
+							<textarea
+								id="message"
+								rows="7"
+								name="message"
+								placeholder="How can we help?"
+								bind:value={formData.message}
+								required={formData.interest === "General question"}
+							></textarea>
+						{/if}
 					</div>
 
 					<button class="submit-button" type="submit" disabled={isSubmitting}>
@@ -254,17 +251,15 @@
 </section>
 
 <style>
-	/* Existing styling blocks remain identical */
 	.contact-page {
-		max-width: 75rem;
-		margin: 0 auto;
-		padding: 5.625rem 1.5rem;
+		width: 100%;
+		padding: clamp(4rem, 8vw, 7rem) clamp(1.125rem, 5vw, 4rem);
+		background: #f7f7f7;
 	}
 
 	.contact-header {
-		max-width: 43.75rem;
-		margin-bottom: 4.375rem;
-    position: relative;
+		max-width: 75rem;
+		margin: 0 auto clamp(3rem, 6vw, 5rem);
 	}
 
 	.eyebrow {
@@ -277,20 +272,20 @@
 
 	h1 {
 		margin: 0 0 1.25rem;
-		font-size: clamp(3rem, 7vw, 5rem);
+		font-size: clamp(2.75rem, 7vw, 5rem);
 		line-height: 1;
 		letter-spacing: -0.04em;
 	}
 
-  h1::after {
-    content: '';
-    display: block;
-    width: 5rem;
-    height: .25rem;
-    margin-top: 1.5rem;
-    border-radius: 62.4375rem;
-    background: white;
-  }
+	h1::after {
+		content: '';
+		display: block;
+		width: 5rem;
+		height: .25rem;
+		margin-top: 1.5rem;
+		border-radius: 62.4375rem;
+		background: #111;
+	}
 
 	.contact-header > p:last-child {
 		margin: 0;
@@ -300,51 +295,17 @@
 	}
 
 	.contact-layout {
-		display: grid;
-		grid-template-columns: 0.8fr 1.5fr;
-		gap: 5rem;
-		align-items: start;
-	}
-
-	.contact-info {
-		padding-top: .625rem;
-	}
-
-	.contact-info h2 {
-		margin: 0 0 1rem;
-		font-size: 2rem;
-		letter-spacing: -0.02em;
-	}
-
-	.contact-info > p {
-		margin: 0 0 2.8125rem;
-		color: #666;
-		line-height: 1.7;
-	}
-
-	.info-item {
-		padding: 1.25rem 0;
-		border-top: .0625rem solid #e5e5e5;
-	}
-
-	.info-item span {
-		display: block;
-		margin-bottom: .375rem;
-		font-size: .75rem;
-		font-weight: 700;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: #707070;
-	}
-
-	.info-item p {
-		margin: 0;
-		font-size: 1rem;
+		width: 100%;
+		max-width: 75rem;
+		margin: 0 auto;
 	}
 
 	.form-wrapper {
-		padding: 2.5rem;
-		background: #f7f7f7;
+		width: 100%;
+		padding: clamp(1.5rem, 4vw, 3.5rem);
+		background: white;
+		border: .0625rem solid #e5e5e5;
+		box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.05);
 	}
 
 	form {
@@ -359,6 +320,10 @@
 		gap: 1.25rem;
 	}
 
+	.form-row .field:only-child {
+		grid-column: 1 / -1;
+	}
+
 	.field {
 		display: flex;
 		flex-direction: column;
@@ -370,9 +335,18 @@
 		font-weight: 600;
 	}
 
+	select:invalid {
+		color: #888;
+	}
+
+	select option {
+		color: #000000;
+	}
+
 	input,
 	select,
 	textarea {
+		box-sizing: border-box;
 		width: 100%;
 		border: .0625rem solid #d5d5d5;
 		background: white;
@@ -405,6 +379,7 @@
 		padding: .9375rem 1.625rem;
 		font-weight: 600;
 		cursor: pointer;
+		border-radius: .125rem;
 		transition:
 			background-color 0.2s ease,
 			transform 0.2s ease;
@@ -420,13 +395,11 @@
 		transform: translateY(1px);
 	}
 
-	/* Style updates for loading dynamic buttons */
 	.submit-button:disabled {
 		opacity: 0.6;
 		cursor: not-allowed;
 	}
 
-	/* Appended Failure styling properties */
 	.error-banner {
 		background: #fdf2f2;
 		border-left: 4px solid #de2a2a;
@@ -477,27 +450,18 @@
 	}
 
 	@media (max-width: 50rem) {
-		.contact-layout {
+		.form-row {
 			grid-template-columns: 1fr;
-			gap: 3.125rem;
-		}
-
-		.contact-header {
-			margin-bottom: 3.125rem;
 		}
 	}
 
 	@media (max-width: 37.5rem) {
 		.contact-page {
-			padding: 4.0625rem 1.125rem;
+			padding: 3.5rem 1rem;
 		}
 
 		.form-wrapper {
-			padding: 1.5625rem 1.25rem;
-		}
-
-		.form-row {
-			grid-template-columns: 1fr;
+			padding: 1.25rem;
 		}
 	}
 </style>
