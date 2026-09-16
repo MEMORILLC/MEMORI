@@ -109,10 +109,6 @@
 	<div class="contact-header">
 		<p class="eyebrow">GET IN TOUCH</p>
 		<h1>Contact Us</h1>
-		<p>
-			Have a question, want more information, or interested in one of
-			our products? Send us a message and we'll get back to you.
-		</p>
 	</div>
 
 	<div class="contact-layout">
@@ -281,16 +277,6 @@
 		font-size: clamp(2.75rem, 7vw, 5rem);
 		line-height: 1;
 		letter-spacing: -0.04em;
-	}
-
-	h1::after {
-		content: '';
-		display: block;
-		width: 5rem;
-		height: .25rem;
-		margin-top: 1.5rem;
-		border-radius: 62.4375rem;
-		background: #111;
 	}
 
 	.contact-header > p:last-child {

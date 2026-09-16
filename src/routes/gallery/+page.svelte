@@ -62,7 +62,7 @@
     height: .25rem;
     margin-top: 1.5rem;
     border-radius: 62.4375rem;
-    background: var(--accent-gradient);
+    background: black;
   }
 
 	.intro {
