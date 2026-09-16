@@ -367,7 +367,7 @@
   }
 
   .cta .eyebrow {
-    color: #999;
+    color: #666;
   }
 
   .cta h2 {
@@ -377,7 +377,7 @@
   .cta p:not(.eyebrow) {
     margin: 0 auto 2.1875rem;
     max-width: 34.375rem;
-    color: #aaa;
+    color: #666;
     line-height: 1.7;
   }
 
@@ -436,4 +436,3 @@
     }
   }
 </style>
-

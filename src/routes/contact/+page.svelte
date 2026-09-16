@@ -328,7 +328,7 @@
 	}
 
 	select:invalid {
-		color: #888;
+		color: #666;
 	}
 
 	select option {
