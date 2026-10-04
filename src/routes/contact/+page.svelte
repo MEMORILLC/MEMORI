@@ -56,7 +56,7 @@
 					'Accept': 'application/json'
 				},
 				body: JSON.stringify({
-					access_key: 'YOUR_ACCESS_KEY_HERE', // <-- Put your Web3Forms Access Key here
+					access_key: 'fba9e74d-e906-4457-96af-fa542ea73eb0', // <-- Put your Web3Forms Access Key here
 					subject: `New Contact Form Submission - ${site.companyName}`,
 					// If a bot checks the box, formData.botcheck becomes true, triggering the spam filter
 					...formData,
