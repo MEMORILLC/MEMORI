@@ -7,27 +7,9 @@ export type GalleryItem = {
 
 export const gallery: GalleryItem[] = [
 	{
-		image: '/gallery/product-1.png',
-		title: 'Product One',
-		alt: 'Picture of Product One',
-		description: 'Description of this product.'
-	},
-	{
-		image: '/gallery/product-2.png',
-		title: 'Product Two',
-		alt: 'Picture of Product Two',
-		description: 'Description of this product.'
-	},
-	{
-		image: '/gallery/product-3.png',
-		title: 'Product Three',
-		alt: 'Picture of Product Three',
-		description: 'Description of this product.'
-	},
-	{
-		image: '/gallery/product-4.png',
-		title: 'Product Four',
-		alt: 'Picture of Product Four',
-		description: 'Description of this product.'
+		image: '/gallery/coffee_mug.jpeg',
+		title: 'Coffee Mug',
+		alt: 'Picture of Coffee Mug Personalized with a Custom Logo and Tag',
+		description: 'Coffee mug favor created for a wedding shower using a custom logo designed with input from the customer and a personalized tag for the attendees.'
 	}
 ];
