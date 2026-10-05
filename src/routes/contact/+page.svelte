@@ -56,12 +56,20 @@
 					'Accept': 'application/json'
 				},
 				body: JSON.stringify({
-					access_key: 'fba9e74d-e906-4457-96af-fa542ea73eb0', // <-- Put your Web3Forms Access Key here
+					access_key: 'fba9e74d-e906-4457-96af-fa542ea73eb0',
 					subject: `New Contact Form Submission - ${site.companyName}`,
-					// If a bot checks the box, formData.botcheck becomes true, triggering the spam filter
+
 					...formData,
+
 					...(formData.interest === 'Custom order'
-						? {}
+						? {
+								customOrderDate: formData.customOrderDate
+									? (() => {
+											const [year, month, day] = formData.customOrderDate.split('-');
+											return `${month}-${day}-${year}`;
+										})()
+									: ''
+							}
 						: {
 								customOrderDate: undefined,
 								orderQuantity: undefined
