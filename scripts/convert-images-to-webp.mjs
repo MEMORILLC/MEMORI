@@ -3,7 +3,7 @@ import { join, extname } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
-const buildDir = join(root, 'build');
+const outputDirs = [join(root, 'build'), join(root, '.svelte-kit/output/client')];
 
 function walk(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -30,6 +30,8 @@ function walk(dir) {
   }
 }
 
-if (existsSync(buildDir)) {
-  walk(buildDir);
+for (const outputDir of outputDirs) {
+  if (existsSync(outputDir)) {
+    walk(outputDir);
+  }
 }

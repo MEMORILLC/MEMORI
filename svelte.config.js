@@ -7,7 +7,7 @@ const config = {
   preprocess: vitePreprocess(),
   kit: {
     paths: {
-      base: "/MEMORI",
+      base: process.env.CUSTOM_DOMAIN ? "" : "/MEMORI",
       relative: false
     },
     adapter: adapter({

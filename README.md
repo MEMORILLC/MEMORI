@@ -1,672 +1,142 @@
-# Company Website
+# Memori
 
-A simple, responsive business website built with **SvelteKit** and designed to be hosted on **GitHub Pages**.
+Memori is a responsive company website built with SvelteKit and TypeScript. It is
+deployed as a static site to GitHub Pages and uses Web3Forms for contact
+submissions, so it does not require a custom server or database.
 
-The website is intentionally lightweight and does not use a database, authentication, shopping cart, checkout system, or custom backend.
+## Site pages
 
-## Features
+- **Home** — company introduction and featured work
+- **About Us** — company story and values
+- **How It Works** — project process and service details
+- **Gallery** — project photos with an image viewer
+- **Contact** — inquiry form
 
-- Home page with company information
-- Responsive navigation
-- Product/work gallery
-- Image lightbox for viewing gallery images
-- Contact form
-- Mobile-friendly design
-- Simple brand styling
-- Static site suitable for GitHub Pages
-- Web3Forms for contact form submissions
-- No database or backend required
+## Technology
 
----
-
-## Tech Stack
-
-- SvelteKit
+- SvelteKit 2 and Svelte 5
 - TypeScript
-- CSS
-- GitHub Pages
-- Web3Forms
-
----
-
-## Project Structure
-
-```text
-.
-├── src/
-│   ├── app.css
-│   │
-│   ├── lib/
-│   │   ├── components/
-│   │   │   ├── Header.svelte
-│   │   │   ├── Footer.svelte
-│   │   │   └── GalleryGrid.svelte
-│   │   │
-│   │   └── data/
-│   │       └── gallery.ts
-│   │
-│   └── routes/
-│       ├── +layout.svelte
-│       ├── +layout.ts
-│       ├── +page.svelte
-│       │
-│       ├── gallery/
-│       │   └── +page.svelte
-│       │
-│       └── contact/
-│           └── +page.svelte
-│
-├── static/
-│   └── gallery/
-│       ├── product-1.jpg
-│       ├── product-2.jpg
-│       ├── product-3.jpg
-│       └── product-4.jpg
-│
-├── .github/
-│   └── workflows/
-│       └── deploy.yml
-│
-├── package.json
-├── package-lock.json
-├── svelte.config.js
-└── README.md
-```
-
----
-
-# Pages
-
-## Home
-
-The home page is located at:
-
-```text
-src/routes/+page.svelte
-```
-
-This is the main landing page and contains the primary company information.
-
-It includes:
-
-- Hero section
-- Company introduction
-- Services/products
-- Gallery preview
-- Contact call-to-action
-
-Most of the company's main marketing text can be changed directly in this file.
-
----
-
-## Gallery
-
-The gallery page is located at:
-
-```text
-src/routes/gallery/+page.svelte
-```
-
-The gallery displays the company's products and/or work.
-
-The gallery information is stored separately in:
-
-```text
-src/lib/data/gallery.ts
-```
-
-This makes it easier to add, remove, or edit products without changing the gallery page itself.
-
-### Adding a Gallery Item
-
-First, place the image in:
-
-```text
-static/gallery/
-```
-
-For example:
-
-```text
-static/gallery/new-product.jpg
-```
-
-Then open:
-
-```text
-src/lib/data/gallery.ts
-```
-
-Add a new item:
-
-```ts
-{
-	image: '/gallery/new-product.jpg',
-	title: 'New Product',
-	description: 'Description of the new product.'
-}
-```
-
-The new item will automatically appear in the gallery.
-
-### Gallery Images
-
-Recommended image formats:
-
-- `.jpg` or `.jpeg` for photographs
-- `.png` for images requiring transparency
-- `.webp` for smaller file sizes
-
-Try to keep image file sizes reasonable so the website loads quickly.
-
----
-
-# Contact
-
-The contact page is located at:
-
-```text
-src/routes/contact/+page.svelte
-```
-
-The contact form contains:
-
-- Name
-- Email
-- Phone
-- Interest/category
-- Message
-
-The form is designed to use **Web3Forms** so that visitors can send messages without the website needing its own backend or database.
-
----
-
-# Site-Wide Components
-
-## Header
-
-Located at:
-
-```text
-src/lib/components/Header.svelte
-```
-
-The header contains:
-
-- Company name/logo
-- Home link
-- Gallery link
-- Contact link
-- Mobile navigation menu
-
-The navigation automatically changes to a mobile menu on smaller screens.
-
----
-
-## Footer
-
-Located at:
-
-```text
-src/lib/components/Footer.svelte
-```
-
-The footer contains:
-
-- Company name
-- Short company description
-- Navigation links
-- Copyright notice
-
-The copyright year updates automatically based on the current year.
-
----
-
-## Gallery Grid
-
-Located at:
-
-```text
-src/lib/components/GalleryGrid.svelte
-```
-
-This component handles:
-
-- Displaying gallery items
-- Gallery layout
-- Opening images in the larger image viewer/lightbox
-- Displaying image titles and descriptions
-
-Most gallery changes should be made in:
-
-```text
-src/lib/data/gallery.ts
-```
-
-rather than editing this component.
-
----
-
-# Styling
-
-Global styling is located in:
-
-```text
-src/app.css
-```
-
-The website uses a simple, clean design with:
-
-- White backgrounds
-- Black/dark text
-- Gray secondary text
-- Subtle borders
-- Brand colors used as accents
-- Responsive layouts
-
-The design is intentionally kept relatively simple so that the website is easy to maintain.
-
----
-
-# Running the Website Locally
+- Static site adapter for GitHub Pages
+- Playwright and axe for browser and accessibility tests
+- Web3Forms for contact form delivery
 
 ## Requirements
 
-You will need:
-
-- Node.js
+- Node.js 22 or newer
 - npm
+- `cwebp` from the WebP tools package for production image conversion and the
+  Playwright preview tests
 
-Install the project dependencies:
+Install dependencies:
 
-```bash
-npm install
+```sh
+npm ci
 ```
+
+## Local development
 
 Start the development server:
 
-```bash
+```sh
 npm run dev
 ```
 
-The website will normally be available at:
+The site is served locally at `http://localhost:5173/MEMORI/`, matching its
+GitHub Pages project-site path. To check types and Svelte diagnostics:
 
-```text
-http://localhost:5173
+```sh
+npm run check
 ```
 
-The development server will automatically update when files are changed.
+To run ESLint:
 
----
+```sh
+npm run lint
+```
 
-# Building the Website
+## Build and preview
 
-To create a production build:
+Build the static site:
 
-```bash
+```sh
 npm run build
 ```
 
-The generated static website will be placed in:
+The generated site is written to `build/`. The `npm run build:webp` command
+builds the site and converts supported PNG/JPEG images to WebP; it requires
+`cwebp` to be installed. To preview the converted production build:
 
-```text
-build/
-```
-
-You can preview the production build locally with:
-
-```bash
+```sh
+npm run build:webp
 npm run preview
 ```
 
----
+## Tests
 
-# GitHub Pages Deployment
+Run the Playwright suite:
 
-The website is configured to be deployed as a static site using GitHub Pages.
-
-GitHub Actions is used to:
-
-1. Install the project dependencies
-2. Build the SvelteKit website
-3. Upload the generated `build/` directory
-4. Deploy the site to GitHub Pages
-
-The deployment workflow is located at:
-
-```text
-.github/workflows/deploy.yml
+```sh
+npm run test:ally
 ```
 
-Once GitHub Pages is configured to use GitHub Actions, pushing changes to the main branch will automatically trigger a new deployment.
+The suite launches a production preview in Chromium and checks:
 
----
+- Automatically detectable WCAG 2.1 AA accessibility issues on all site pages
+- Header navigation and the mobile navigation menu
+- That visible images load
+- Contact form browser validation, successful submission, and error recovery
 
-# Making Changes
+The contact tests mock Web3Forms; they do not send real messages. Playwright
+browser binaries must be installed once per machine if they are not already
+available:
 
-The most common changes should be made in these files:
+```sh
+npx playwright install chromium
+```
 
-| What needs to change | File |
-|---|---|
-| Home page content | `src/routes/+page.svelte` |
+## Updating site content
+
+| Content | Location |
+| --- | --- |
+| Site name, tagline, email, and social links | `src/lib/data/site.ts` |
+| Home page | `src/routes/+page.svelte` |
+| About Us | `src/routes/about-us/+page.svelte` |
+| How It Works | `src/routes/how-it-works/+page.svelte` |
 | Gallery page | `src/routes/gallery/+page.svelte` |
-| Gallery products | `src/lib/data/gallery.ts` |
-| Gallery images | `static/gallery/` |
-| Contact page | `src/routes/contact/+page.svelte` |
-| Header/navigation | `src/lib/components/Header.svelte` |
-| Footer | `src/lib/components/Footer.svelte` |
-| Overall styling | `src/app.css` |
-| Gallery behavior | `src/lib/components/GalleryGrid.svelte` |
-
----
-
-# Adding New Gallery Photos
-
-Adding a new product to the gallery requires two steps.
-
-## Step 1: Add the Image
-
-Place the image in:
-
-```text
-static/gallery/
-```
-
-For example:
-
-```text
-static/gallery/red-chair.jpg
-```
-
-## Step 2: Add the Product Information
-
-Open:
-
-```text
-src/lib/data/gallery.ts
-```
-
-Add:
-
-```ts
-{
-	image: '/gallery/red-chair.jpg',
-	title: 'Red Chair',
-	description: 'A description of the product.'
-}
-```
-
-Save the file.
-
-The new product will automatically appear in the gallery.
-
----
-
-# Updating Company Information
-
-Company information is currently written directly into the relevant Svelte pages and components.
-
-Common information that may need to be changed includes:
-
-- Company name
-- Email address
-- Phone number
-- Company description
-- Services
-- Contact information
-
-Search the project for:
-
-```text
-COMPANY NAME
-```
-
-and replace it with the actual company name.
-
-Also search for the placeholder contact information:
-
-```text
-your@email.com
-```
-
-and:
-
-```text
-(555) 555-5555
-```
-
-Replace these with the actual company contact information.
-
----
-
-# Updating the Website
-
-The normal workflow for making a change is:
-
-```text
-1. Make the change
-       ↓
-2. Test it locally
-       ↓
-3. Run npm run build
-       ↓
-4. Commit the changes
-       ↓
-5. Push to GitHub
-       ↓
-6. GitHub Actions builds the site
-       ↓
-7. GitHub Pages publishes the new version
-```
-
-For example:
-
-```bash
-git status
-git add .
-git commit -m "Update website"
-git push
-```
-
-After the push, GitHub Actions will handle the deployment.
-
----
-
-# Contact Form
-
-The contact form uses Web3Forms rather than a custom backend.
-
-This allows the website to remain a completely static GitHub Pages website while still allowing visitors to submit messages.
-
-The form will collect:
-
-```text
-Name
-Email
-Phone
-Interest
-Message
-```
-
-The submitted information will be sent through Web3Forms to the configured recipient email address.
-
-The Web3Forms configuration will be contained in:
-
-```text
-src/routes/contact/+page.svelte
-```
-
-No database is required.
-
----
-
-# Important Notes
-
-## Static Website
-
-This website is intentionally static.
-
-It does not require:
-
-- Database
-- Server
-- User accounts
-- Authentication
-- Shopping cart
-- Checkout
-- Custom backend
-
-This keeps the website simple and inexpensive to host.
-
-## Contact Form
-
-The contact form depends on Web3Forms for handling submissions.
-
-If the Web3Forms configuration is removed or incorrect, the form will not be able to send messages.
-
-## Images
-
-Images stored inside:
-
-```text
-static/
-```
-
-are publicly accessible from the website.
-
-Do not place private or sensitive files inside the `static/` directory.
-
----
-
-# Troubleshooting
-
-## Website Works Locally but Not on GitHub Pages
-
-Check:
-
-1. GitHub Actions completed successfully.
-2. GitHub Pages is configured to use **GitHub Actions**.
-3. The SvelteKit static adapter is installed.
-4. `npm run build` works successfully.
-5. The GitHub Pages base path is configured correctly.
-
-If the site is hosted as:
-
-```text
-https://USERNAME.github.io/REPOSITORY/
-```
-
-the project may require a base path.
-
-If the repository itself is:
-
-```text
-USERNAME.github.io
-```
-
-then the website is hosted at:
-
-```text
-https://USERNAME.github.io/
-```
-
-and does not have the same repository subpath issue.
-
----
-
-## Gallery Image Does Not Appear
-
-Check that the image exists inside:
-
-```text
-static/gallery/
-```
-
-and that the path in `gallery.ts` exactly matches the filename.
-
-For example, if the file is:
-
-```text
-static/gallery/product.jpg
-```
-
-the gallery entry should use:
-
-```ts
-image: '/gallery/product.jpg'
-```
-
-File names are case-sensitive when deployed to GitHub Pages.
-
-For example:
-
-```text
-Product.jpg
-```
-
-and:
-
-```text
-product.jpg
-```
-
-are different filenames.
-
----
-
-## Changes Are Not Showing on the Live Website
-
-First check the **Actions** tab in the GitHub repository.
-
-Make sure the latest deployment completed successfully.
-
-Then verify that the changes were committed and pushed:
-
-```bash
-git status
-git add .
-git commit -m "Update website"
-git push
-```
-
-GitHub Pages can take a short amount of time to publish a new deployment.
-
----
-
-## Contact Form Does Not Send
-
-Check:
-
-1. The Web3Forms access key is correct.
-2. The form is posting to the correct Web3Forms endpoint.
-3. The required form fields are present.
-4. The browser console does not show an error.
-5. The Web3Forms configuration is active.
-
----
-
-# Future Improvements
-
-Possible future additions include:
-
-- Real company logo
-- Custom domain
-- More gallery categories
-- Gallery filtering
-- Social media links
-- Google Maps/location information
-- Improved SEO metadata
-- Analytics
-- Additional contact fields
-- Additional spam protection
-- Better image optimization
-
-The website should remain simple unless additional functionality is actually needed.
-
----
-
-# License
-
-This website is intended for use by the company it was created for.
-
-All company branding, logos, photographs, product information, and other business content belong to their respective owners.
+| Gallery items | `src/lib/data/gallery.ts` |
+| Contact page and form | `src/routes/contact/+page.svelte` |
+| Shared header and navigation | `src/lib/components/Header.svelte` |
+| Shared footer | `src/lib/components/Footer.svelte` |
+| Global styles | `src/app.css` |
+| Static images | `static/` |
+
+To add a gallery item, put its image in `static/gallery/` and add an entry to
+`src/lib/data/gallery.ts`. Use a path relative to `static`, such as
+`/gallery/new-item.jpeg`, and include a descriptive `alt` value.
+
+## GitHub Pages deployment
+
+The workflow in `.github/workflows/deploy.yml` deploys the `main` branch to
+GitHub Pages. In the repository settings, configure **Pages → Build and
+deployment → Source** to use **GitHub Actions**. Pushes to `main` then build and
+publish the site automatically; the workflow can also be run manually.
+
+By default, the site uses the `/MEMORI` base path for the repository's GitHub
+Pages URL. To use a custom domain:
+
+1. In the repository, open **Settings → Pages** and enter your hostname in
+   **Custom domain**, then save it.
+2. Configure the domain's DNS records with your DNS provider. For apex and
+   `www` record requirements, follow GitHub's
+   [custom domain documentation](https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site).
+3. In **Settings → Secrets and variables → Actions → Variables**, create a
+   repository variable named `CUSTOM_DOMAIN` with the same hostname (for
+   example, `www.example.com`, without `https://` or a path). This makes the
+   build use the domain root instead of `/MEMORI`.
+4. Push to `main` or run the deploy workflow. The workflow deploys using the
+   custom domain configured in Pages; it does not need a `CNAME` file because
+   the site is published with GitHub Actions. Enable **Enforce HTTPS** in
+   **Settings → Pages** when GitHub makes it available.
+
+DNS changes can take time to propagate. GitHub Pages' custom-domain setting and
+DNS records must agree for the site and HTTPS certificate to work correctly.

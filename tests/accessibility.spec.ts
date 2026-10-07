@@ -3,6 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 
 const pages = [
 	{ name: 'Home', path: '/MEMORI/' },
+	{ name: 'About', path: '/MEMORI/about-us' },
+	{ name: 'How It Works', path: '/MEMORI/how-it-works' },
 	{ name: 'Gallery', path: '/MEMORI/gallery' },
 	{ name: 'Contact', path: '/MEMORI/contact' },
 ];

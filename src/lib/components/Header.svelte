@@ -3,7 +3,6 @@
   import { site } from "$lib/data/site";
   import { resolve } from "$app/paths";
   import Image from "$lib/components/Image.svelte";
-
   function closeMenu() {
     menuOpen = false;
   }

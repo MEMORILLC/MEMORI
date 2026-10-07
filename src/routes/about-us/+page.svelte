@@ -210,7 +210,7 @@
   .value-number {
     display: block;
     margin-bottom: 1rem;
-    color: #999;
+    color: #666;
     font-family: monospace;
     font-size: 2.5rem;
     line-height: 1;
@@ -230,8 +230,8 @@
   .cta {
     padding: 8rem 2rem;
     text-align: center;
-    background: #111;
-    color: #fff;
+    background: white;
+    color: black;
   }
 
   .cta-inner {
@@ -244,7 +244,7 @@
   }
 
   .cta-inner > p:last-of-type {
-    color: #ccc;
+    color: #666;
   }
 
   @media (max-width: 50rem) {

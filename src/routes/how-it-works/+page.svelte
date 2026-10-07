@@ -204,7 +204,7 @@
     font-size: 2.5rem;
     font-weight: 300;
     font-family: monospace;
-    opacity: 0.25;
+    color: #666;
     margin-bottom: 1rem;
     line-height: 1;
   }
