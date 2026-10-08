@@ -15,11 +15,12 @@
   } = $props();
 
   let displayImage = $derived(dev ? src : src.replace(/\.(png|jpe?g)$/i, ".webp"));
+  let versionedImage = $derived(`${asset(displayImage)}?v=${import.meta.env.VITE_BUILD_ID}`);
 </script>
 
 <picture class={className}>
   {#if !dev}
-    <source srcset={asset(displayImage)} type="image/webp" />
+    <source srcset={versionedImage} type="image/webp" />
   {/if}
-  <img src={asset(displayImage)} {alt} {loading} decoding="async" class={className} />
+  <img src={versionedImage} {alt} {loading} decoding="async" class={className} />
 </picture>
