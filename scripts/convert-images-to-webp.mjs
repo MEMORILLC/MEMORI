@@ -15,7 +15,7 @@ function walk(dir) {
 
     const ext = extname(entry.name).toLowerCase();
     if (!['.png', '.jpg', '.jpeg'].includes(ext)) continue;
-    if (entry.name === 'memori_logo.png') continue;
+    if (entry.name === 'memori_logo.png' || entry.name === 'memori_favicon.png') continue;
 
     const webpPath = fullPath.replace(/\.(png|jpe?g)$/i, '.webp');
 
