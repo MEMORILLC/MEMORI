@@ -216,6 +216,7 @@
 								type="date"
 								bind:value={formData.customOrderDate}
 								required={formData.interest === "Custom order"}
+								onclick={(event) => event.currentTarget.showPicker()}
 							/>
 
 							<label for="order-quantity">Estimated Quantity *</label>
