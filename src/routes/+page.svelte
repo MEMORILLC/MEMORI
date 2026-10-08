@@ -4,6 +4,8 @@
   import { gallery } from "$lib/data/gallery";
   import { resolve } from "$app/paths";
 
+  const galleryPreview = gallery.filter((_, index) => [0, 1, 3].includes(index));
+
   const services = [
     {
       title: "Quality Products",
@@ -117,7 +119,7 @@
       <a href={resolve("/gallery")} class="text-link" aria-label="View full gallery">View full gallery →</a>
     </div>
 
-    <GalleryGrid items={gallery} />
+    <GalleryGrid items={galleryPreview} />
   </div>
 
 </section>
