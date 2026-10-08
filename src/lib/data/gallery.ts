@@ -8,7 +8,7 @@ export type GalleryItem = {
 export const gallery: GalleryItem[] = [
 	{
 		image: '/gallery/coffee_mug.jpeg',
-		title: 'Personalized Wedding Shower Mug',
+		title: 'Love, Laughter, and Lattes',
 		alt: 'Picture of Coffee Mug Personalized with a Custom Logo and Tag',
 		description: 'Personalized Wedding Shower Mug — Features a custom, collaborative logo design and individual guest tags.'
 	}
