@@ -35,5 +35,5 @@ export const gallery: GalleryItem[] = [
 		title: 'A Recipe for Forever',
 		alt: 'Picture of a cutting-board-inspired shower invite.',
 		description: 'An exquisitely detailed, cutting-board-inspired shower invite.'
-	},
+	}
 ];
