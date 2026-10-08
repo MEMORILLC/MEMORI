@@ -58,6 +58,45 @@ test('visible images load on the main pages', async ({ page }) => {
 	}
 });
 
+test('gallery groups paired views and provides an accessible flip control', async ({ page }) => {
+	await page.goto('/MEMORI/gallery');
+
+	await expect(page.locator('.gallery-item')).toHaveCount(3);
+
+	const cuttingBoardCard = page.locator('.gallery-item').filter({
+		has: page.getByRole('button', { name: 'Show back of Carved with Care' }),
+	});
+	await cuttingBoardCard.hover();
+	await expect(cuttingBoardCard.locator('.overlay')).toHaveCSS('opacity', '1');
+
+	const showBackButton = page.getByRole('button', { name: 'Show back of Carved with Care' });
+	await showBackButton.click();
+	await expect(
+		page.getByRole('button', { name: 'Show front of Carved with Care' }),
+	).toHaveAttribute('aria-pressed', 'true');
+
+	await page.getByRole('button', { name: 'View Carved with Care' }).click();
+	const lightboxShowBackButton = page.getByRole('button', {
+		name: 'Show back of Carved with Care',
+	});
+	await lightboxShowBackButton.click();
+	await expect(
+		page.getByRole('dialog').getByRole('button', { name: 'Show front of Carved with Care' }),
+	).toHaveAttribute('aria-pressed', 'true');
+
+	await page.keyboard.press('ArrowRight');
+	await expect(page.getByRole('dialog').getByRole('heading', { name: 'A Recipe for Forever' })).toBeVisible();
+	await expect(
+		page.getByRole('dialog').getByRole('button', { name: 'Show back of A Recipe for Forever' }),
+	).toHaveAttribute('aria-pressed', 'false');
+
+	await page.getByRole('button', { name: 'Previous image' }).click();
+	await expect(page.getByRole('dialog').getByRole('heading', { name: 'Carved with Care' })).toBeVisible();
+	await expect(
+		page.getByRole('dialog').getByRole('button', { name: 'Show back of Carved with Care' }),
+	).toHaveAttribute('aria-pressed', 'false');
+});
+
 test('contact form validates required fields and submits successfully', async ({ page }) => {
 	await page.route('https://api.web3forms.com/submit', (route) =>
 		route.fulfill({

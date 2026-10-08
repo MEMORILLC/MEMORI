@@ -4,7 +4,7 @@
   import { gallery } from "$lib/data/gallery";
   import { resolve } from "$app/paths";
 
-  const galleryPreview = gallery.filter((_, index) => [0, 1, 3].includes(index));
+  const galleryPreview = gallery.slice(0, 3);
 
   const services = [
     {
