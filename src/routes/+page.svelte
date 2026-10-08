@@ -68,10 +68,11 @@
       </p>
 
       <p>
-        We believe that great products start with attention to detail and that
-        every customer deserves a personal experience. Whether you already know
-        what you're looking for or need help finding the right option, we're
-        here to help.
+        We believe that life's most beautiful moments deserve to be held. From preserving
+        a cherished memory to celebrating a new milestone, we craft personalized physical 
+        mementos and custom pieces with absolute attention to detail. Whether you have a 
+        clear vision or need help bringing your story to life, we are here to help you 
+        hold onto what matters most.
       </p>
 
       <a href={resolve("/contact")} class="text-link" aria-label="Get in touch">Get in touch →</a>
