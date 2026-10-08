@@ -56,13 +56,17 @@
         feel as unique as the memories behind them.
       </p>
       <p>
-        We are passionate about creating quality products and making the process
-        personal from beginning to end. Whether you arrive with a clear vision or
-        need a little inspiration, we are here to help bring it to life.
+        Our inspiration comes from the idea that our favorite moments belong in our
+        hands - whether that means preserving a cherished past chapter or crafting
+        personalized pieces to celebrate an upcoming milestone. What started as a
+        passion for crafting detailed, meaningful pieces for our own family
+        celebrations grew into a deeper realization:
+        a phyiscal object has the incredible power to anchor a memory.
       </p>
       <p>
-        Every project is an opportunity to make something meaningful, useful, and
-        unmistakably yours.
+        We built this business to be a bridge between life's fleeting moments and the
+        physical world. No matter the occassion, we treat your story with the exact
+        same care, intention, and devotion we bring to our own memories.
       </p>
     </div>
   </div>
