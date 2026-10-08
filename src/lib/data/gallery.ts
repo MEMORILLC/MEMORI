@@ -8,8 +8,8 @@ export type GalleryItem = {
 export const gallery: GalleryItem[] = [
 	{
 		image: '/gallery/coffee_mug.jpeg',
-		title: 'Coffee Mug',
+		title: 'Personalized Wedding Shower Mug',
 		alt: 'Picture of Coffee Mug Personalized with a Custom Logo and Tag',
-		description: 'Coffee mug favor created for a wedding shower using a custom logo designed with input from the customer and a personalized tag for the attendees.'
+		description: 'Personalized Wedding Shower Mug — Features a custom, collaborative logo design and individual guest tags.'
 	}
 ];
