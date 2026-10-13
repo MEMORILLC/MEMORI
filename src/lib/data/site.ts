@@ -31,6 +31,7 @@ const social: Record<string, SocialLink> = {
 export const site = {
   companyName: 'Memori',
   tagline: 'Made by your moments.',
+  url: 'https://www.memoricustom.com',
   email: 'MEMORILLC@memoricustom.com',
   social
 };

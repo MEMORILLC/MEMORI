@@ -1,5 +1,6 @@
 <script lang="ts">
   import { site } from "$lib/data/site";
+  import Seo from "$lib/components/Seo.svelte";
   import { resolve } from "$app/paths";
 
   // Detailed step-by-step process timeline
@@ -27,13 +28,11 @@
   ];
 </script>
 
-<svelte:head>
-  <title>How It Works | {site.companyName}</title>
-  <meta
-    name="description"
-    content="Discover our process and learn how we bring your custom products from concept to reality at {site.companyName}."
-  />
-</svelte:head>
+<Seo
+  title="How Custom Orders Work | {site.companyName}"
+  description="See how Memori works with you to design and create personalized gifts and custom keepsakes, from the first idea through careful crafting and delivery."
+  path="/how-it-works"
+/>
 
 <!-- HERO SECTION -->
 <section class="hero subpage-hero">
