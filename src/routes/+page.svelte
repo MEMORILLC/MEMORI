@@ -57,10 +57,10 @@
 <!-- ABOUT -->
 <section class="section about" id="about">
   <div class="section-inner about-grid">
-    <div>
+    <header>
       <p class="eyebrow">ABOUT US</p>
       <h2>A company built around quality.</h2>
-    </div>
+    </header>
 
     <div class="about-text">
       <p>
@@ -85,23 +85,23 @@
 <!-- SERVICES / FEATURES -->
 <section class="section features">
   <div class="section-inner">
-    <div class="section-heading">
+    <header class="section-heading">
       <p class="eyebrow">WHAT WE OFFER</p>
       <h2>Why choose {site.companyName}?</h2>
-    </div>
+    </header>
 
-    <div class="feature-grid">
+    <ul class="feature-grid">
       {#each services as service (service)}
-        <div class="feature">
+        <li class="feature">
           <div class="feature-number">
             {String(services.indexOf(service) + 1).padStart(2, "0")}
           </div>
 
           <h3>{service.title}</h3>
           <p>{service.description}</p>
-        </div>
+        </li>
       {/each}
-    </div>
+    </ul>
   </div>
 
 </section>
@@ -109,14 +109,14 @@
 <!-- GALLERY PREVIEW -->
 <section class="section gallery-preview">
   <div class="section-inner">
-    <div class="section-heading gallery-heading">
+    <header class="section-heading gallery-heading">
       <div>
         <p class="eyebrow">OUR WORK</p>
         <h2>Take a look at what we offer.</h2>
       </div>
 
       <a href={resolve("/gallery")} class="text-link" aria-label="View full gallery">View full gallery →</a>
-    </div>
+    </header>
 
     <GalleryGrid items={galleryPreview} />
   </div>
@@ -321,6 +321,9 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .feature {

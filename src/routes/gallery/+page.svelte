@@ -11,7 +11,7 @@
 />
 
 <section class="gallery-page">
-	<div class="page-header">
+	<header class="page-header">
 		<p class="eyebrow">OUR WORK</p>
 
 		<h1>Gallery</h1>
@@ -19,7 +19,7 @@
 		<p class="intro">
 			Take a look at some of our products and work.
 		</p>
-	</div>
+	</header>
 
 	<GalleryGrid items={gallery} />
 </section>

@@ -18,6 +18,12 @@ Each page uses the shared `src/lib/components/Seo.svelte` component for its
 title, description, canonical URL, and social sharing metadata. Update the
 site's public URL in `src/lib/data/site.ts` if its domain changes.
 
+The HTML pages use one descriptive `<h1>` followed by ordered section headings.
+`static/sitemap.xml` lists the public pages, `static/robots.txt` permits crawling
+and points crawlers to the sitemap, and `static/llms.txt` summarizes the site for
+AI crawlers. Keep these files in sync when public pages or the site domain change.
+Submit the sitemap URL to Google Search Console after verifying the site there.
+
 ## Technology
 
 - SvelteKit 2 and Svelte 5

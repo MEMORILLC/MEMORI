@@ -116,10 +116,10 @@
 />
 
 <section class="contact-page">
-	<div class="contact-header">
+	<header class="contact-header">
 		<p class="eyebrow">GET IN TOUCH</p>
 		<h1>Contact Us</h1>
-	</div>
+	</header>
 
 	<div class="contact-layout">
 		<div class="form-wrapper">
