@@ -56,23 +56,23 @@
 <!-- THE STEPS SECTION -->
 <section class="section process" id="process-steps">
   <div class="section-inner">
-    <div class="section-heading">
+    <header class="section-heading">
       <p class="eyebrow">STEP-BY-STEP</p>
       <h2>From concept to creation.</h2>
-    </div>
+    </header>
 
-    <div class="feature-grid">
+    <ol class="feature-grid">
       {#each steps as step, index (step)}
-        <div class="feature">
+        <li class="feature">
           <div class="feature-number">
             {String(index + 1).padStart(2, "0")}
           </div>
 
           <h3>{step.title}</h3>
           <p>{step.description}</p>
-        </div>
+        </li>
       {/each}
-    </div>
+    </ol>
   </div>
 </section>
 
@@ -191,6 +191,9 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 3rem 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .feature {

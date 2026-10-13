@@ -1,0 +1,20 @@
+# Memori
+
+> Memori creates personalized gifts and custom keepsakes for meaningful moments.
+
+Memori offers thoughtfully designed, personalized products and custom pieces made
+with care. Visitors can learn about the company, explore its work, understand the
+custom order process, and contact the team with questions or project ideas.
+
+## Key pages
+
+- [Home](https://www.memoricustom.com/): Personalized gifts and custom keepsakes
+- [About Memori](https://www.memoricustom.com/about-us): Company story and values
+- [How custom orders work](https://www.memoricustom.com/how-it-works): Custom order steps
+- [Gallery](https://www.memoricustom.com/gallery): Examples of personalized products
+- [Contact Memori](https://www.memoricustom.com/contact): Contact and custom order inquiries
+
+## Discovery
+
+- [XML sitemap](https://www.memoricustom.com/sitemap.xml)
+- [Robots policy](https://www.memoricustom.com/robots.txt)

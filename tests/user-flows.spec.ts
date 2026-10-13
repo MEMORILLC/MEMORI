@@ -5,6 +5,50 @@ const navigationPages = [
 	{ name: 'How it works', path: '/MEMORI/how-it-works' },
 ];
 
+const contentPages = [
+	{ path: '/MEMORI/', heading: /one of a kind.*and uniquely yours/i },
+	{ path: '/MEMORI/about-us', heading: /made by your moments/i },
+	{ path: '/MEMORI/how-it-works', heading: /how it works/i },
+	{ path: '/MEMORI/gallery', heading: /gallery/i },
+	{ path: '/MEMORI/contact', heading: /contact us/i },
+];
+
+test('content pages have one descriptive h1 and a logical heading hierarchy', async ({ page }) => {
+	for (const { path, heading } of contentPages) {
+		await page.goto(path);
+
+		const headings = await page.locator('h1, h2, h3, h4, h5, h6').evaluateAll((elements) =>
+			elements.map((element) => ({
+				level: Number(element.tagName.slice(1)),
+				text: element.textContent?.trim() ?? '',
+			})),
+		);
+		const h1s = headings.filter(({ level }) => level === 1);
+
+		expect(h1s).toHaveLength(1);
+		expect(h1s[0].text).toMatch(heading);
+
+		for (let index = 1; index < headings.length; index += 1) {
+			expect(headings[index].level).toBeLessThanOrEqual(headings[index - 1].level + 1);
+		}
+	}
+});
+
+test('crawler discovery files are served from the site root', async ({ request }) => {
+	const [robots, sitemap, llms] = await Promise.all([
+		request.get('/MEMORI/robots.txt'),
+		request.get('/MEMORI/sitemap.xml'),
+		request.get('/MEMORI/llms.txt'),
+	]);
+
+	expect(robots.ok()).toBe(true);
+	expect(await robots.text()).toContain('Sitemap: https://www.memoricustom.com/sitemap.xml');
+	expect(sitemap.ok()).toBe(true);
+	expect(await sitemap.text()).toContain('<loc>https://www.memoricustom.com/</loc>');
+	expect(llms.ok()).toBe(true);
+	expect(await llms.text()).toContain('https://www.memoricustom.com/how-it-works');
+});
+
 test('header navigation opens the About Us and How It Works pages', async ({ page }) => {
 	await page.goto('/MEMORI/');
 

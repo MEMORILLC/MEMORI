@@ -44,10 +44,10 @@
 
 <section class="section story" id="our-story">
   <div class="section-inner story-grid">
-    <div class="section-heading">
+    <header class="section-heading">
       <p class="eyebrow">OUR STORY</p>
       <h2>A company built around quality.</h2>
-    </div>
+    </header>
 
     <div class="story-text">
       <p>
@@ -73,10 +73,10 @@
 
 <section class="section values">
   <div class="section-inner">
-    <div class="section-heading">
+    <header class="section-heading">
       <p class="eyebrow">WHAT MATTERS TO US</p>
       <h2>Care in every detail.</h2>
-    </div>
+    </header>
 
     <div class="value-grid">
       {#each values as value (value.number)}
