@@ -10,7 +10,7 @@
 	let { title, description, path }: Props = $props();
 
 	const canonicalUrl = $derived(`${site.url}${path}`);
-	const imageUrl = `${site.url}/logos/memori_logo.png`;
+	const imageUrl = `${site.url}/logos/social-preview.jpg`;
 </script>
 
 <svelte:head>
@@ -25,5 +25,8 @@
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={canonicalUrl} />
 	<meta property="og:image" content={imageUrl} />
-	<meta property="og:image:alt" content={`${site.companyName} logo`} />
+	<meta
+		property="og:image:alt"
+		content="Memori personalized gifts and custom keepsakes, featuring engraved cutting boards."
+	/>
 </svelte:head>
