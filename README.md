@@ -12,6 +12,12 @@ submissions, so it does not require a custom server or database.
 - **Gallery** — project photos with an image viewer
 - **Contact** — inquiry form
 
+## SEO metadata
+
+Each page uses the shared `src/lib/components/Seo.svelte` component for its
+title, description, canonical URL, and social sharing metadata. Update the
+site's public URL in `src/lib/data/site.ts` if its domain changes.
+
 ## Technology
 
 - SvelteKit 2 and Svelte 5

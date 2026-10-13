@@ -1,6 +1,7 @@
 <script lang="ts">
   import { site } from "$lib/data/site";
   import GalleryGrid from "$lib/components/GalleryGrid.svelte";
+  import Seo from "$lib/components/Seo.svelte";
   import { gallery } from "$lib/data/gallery";
   import { resolve } from "$app/paths";
 
@@ -25,13 +26,11 @@
   ];
 </script>
 
-<svelte:head>
-  <title>{site.companyName}</title>
-  <meta
-    name="description"
-    content="Learn more about {site.companyName} and explore our products."
-  />
-</svelte:head>
+<Seo
+  title="Personalized Gifts & Custom Keepsakes | {site.companyName}"
+  description="Discover personalized gifts, engraved keepsakes, and custom pieces made with care by Memori. Create something meaningful for the moments that matter."
+  path="/"
+/>
 
 <!-- HERO -->
 <section class="hero">

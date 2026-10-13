@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { site } from '$lib/data/site';
+	import Seo from '$lib/components/Seo.svelte';
 
 	// 1. Manage form state, individual field values, and errors using Svelte 5 Runes
 	let submitted = $state(false);
@@ -108,10 +109,11 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Contact | {site.companyName}</title>
-	<meta name="description" content={`Get in touch with ${site.companyName}.`} />
-</svelte:head>
+<Seo
+	title="Contact Memori | Start a Custom Gift Order"
+	description="Contact Memori to ask about personalized gifts, custom keepsakes, or a project idea. We would love to help you make something meaningful."
+	path="/contact"
+/>
 
 <section class="contact-page">
 	<div class="contact-header">

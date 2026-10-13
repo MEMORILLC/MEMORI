@@ -1,6 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { site } from "$lib/data/site";
+  import Seo from "$lib/components/Seo.svelte";
 
   const values = [
     {
@@ -24,13 +25,11 @@
   ];
 </script>
 
-<svelte:head>
-  <title>About Us | {site.companyName}</title>
-  <meta
-    name="description"
-    content="Learn more about our story, values, and commitment to making products with care."
-  />
-</svelte:head>
+<Seo
+  title="About Memori | Thoughtful Custom Gifts & Keepsakes"
+  description="Learn how Memori turns meaningful moments into thoughtful, personalized gifts and custom keepsakes, crafted with care and attention to detail."
+  path="/about-us"
+/>
 
 <section class="hero subpage-hero">
   <div class="hero-content">

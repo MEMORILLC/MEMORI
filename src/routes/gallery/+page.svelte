@@ -1,18 +1,14 @@
 <script lang="ts">
+	import Seo from '$lib/components/Seo.svelte';
 	import GalleryGrid from '$lib/components/GalleryGrid.svelte';
 	import { gallery } from '$lib/data/gallery';
-
-	const companyName = 'MEMORI';
 </script>
 
-<svelte:head>
-	<title>Gallery | {companyName}</title>
-
-	<meta
-		name="description"
-		content={`Explore the products and work from ${companyName}.`}
-	/>
-</svelte:head>
+<Seo
+	title="Personalized Gift & Keepsake Gallery | Memori"
+	description="Browse Memori's personalized mugs, engraved cutting boards, custom invitations, and other thoughtful keepsakes made for life's special moments."
+	path="/gallery"
+/>
 
 <section class="gallery-page">
 	<div class="page-header">
