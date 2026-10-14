@@ -81,6 +81,10 @@
     else if (event.key === "Escape") closeImage();
   }
 
+  function isControlEvent(event: MouseEvent | TouchEvent) {
+    return event.target instanceof Element && event.target.closest("button") !== null;
+  }
+
   function handleMouseMove(event: MouseEvent) {
     if (!isZoomed) return;
 
@@ -155,10 +159,24 @@
 
 <div class="gallery-grid">
   {#each items as item (item)}
-    <button class="gallery-item" type="button" onclick={() => openImage(item)} aria-label={`View ${item.title}`}>
-      <Image src={item.image} alt={item.alt} />
-      <div class="overlay"><span>{item.title}</span></div>
-    </button>
+    <div class="gallery-item">
+      <Image
+        src={item.image}
+        alt={item.alt}
+        back={item.back}
+        flipLabel={item.title}
+        class="gallery-image"
+      />
+      <button
+        class="gallery-open"
+        type="button"
+        onclick={() => openImage(item)}
+        aria-label={`View ${item.title}`}
+      ></button>
+      <div class="overlay" aria-hidden="true">
+        <span>{item.title}</span>
+      </div>
+    </div>
   {/each}
 </div>
 
@@ -166,15 +184,16 @@
   <div
     class="lightbox"
     role="presentation"
-    onclick={closeImage}
-    onkeydown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') closeImage();
+    onclick={(event) => {
+      if (event.target === event.currentTarget) closeImage();
     }}
-    ontouchstart={(e) => handleDragStart(e.touches[0].clientX, e.touches[0].clientY)}
+    ontouchstart={(e) => {
+      if (!isControlEvent(e)) handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+    }}
     ontouchmove={(r) => handleDragMove(r.touches[0].clientX, r.touches[0].clientY, r)}
     ontouchend={handleDragEnd}
     onmousedown={(e) => {
-      if (!isZoomed) handleDragStart(e.clientX, e.clientY);
+      if (!isZoomed && !isControlEvent(e)) handleDragStart(e.clientX, e.clientY);
     }}
     onmousemove={(e) => {
       if (!isZoomed) handleDragMove(e.clientX, e.clientY, e);
@@ -186,7 +205,7 @@
       if (!isZoomed) handleDragEnd();
     }}
   >
-    <div class="lightbox-content" role="dialog" aria-modal="true" tabindex="-1" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+    <div class="lightbox-content" role="dialog" aria-modal="true" tabindex="-1">
       <button class="close-button" type="button" aria-label="Close image" onclick={closeImage}>×</button>
 
       <button class="nav-button prev-button" type="button" aria-label="Previous image" onclick={(e) => { e.stopPropagation(); navigate('prev'); }}>‹</button>
@@ -199,37 +218,72 @@
           style="transform: translateX(calc((-100% - {targetSlideOffset * 100}%) - {GAP_REM + (targetSlideOffset * GAP_REM)}rem + {currentTranslateX}px));"
         >
           <div class="slide-wrapper">
-            <div class="zoom-container">
-              <Image src={items[prevIndex].image} alt={items[prevIndex].alt} loading="lazy" />
-            </div>
+            {#key items[prevIndex].image}
+              <div class="zoom-container">
+                <Image
+                  src={items[prevIndex].image}
+                  alt={items[prevIndex].alt}
+                  back={items[prevIndex].back}
+                  flipLabel={items[prevIndex].title}
+                  loading="lazy"
+                />
+              </div>
+            {/key}
           </div>
 
           <div class="slide-wrapper">
-            <div
-              class="zoom-container"
-              class:zoomed={isZoomed}
-              onclick={handleImageClick}
-              onmousemove={handleMouseMove}
-              style="--zoom-x: {zoomX}%; --zoom-y: {zoomY}%;"
-              role="presentation"
-            >
-              <Image src={items[currentIndex].image} alt={items[currentIndex].alt} loading="eager" />
-            </div>
+            {#key items[currentIndex].image}
+              <div
+                class="zoom-container"
+                class:zoomed={isZoomed}
+                onclick={handleImageClick}
+                onmousemove={handleMouseMove}
+                style="--zoom-x: {zoomX}%; --zoom-y: {zoomY}%;"
+                role="presentation"
+              >
+                <Image
+                  src={items[currentIndex].image}
+                  alt={items[currentIndex].alt}
+                  back={items[currentIndex].back}
+                  flipLabel={items[currentIndex].title}
+                  loading="eager"
+                />
+              </div>
+            {/key}
           </div>
 
           <div class="slide-wrapper">
-            <div class="zoom-container">
-              <Image src={items[nextIndex].image} alt={items[nextIndex].alt} loading="lazy" />
-            </div>
+            {#key items[nextIndex].image}
+              <div class="zoom-container">
+                <Image
+                  src={items[nextIndex].image}
+                  alt={items[nextIndex].alt}
+                  back={items[nextIndex].back}
+                  flipLabel={items[nextIndex].title}
+                  loading="lazy"
+                />
+              </div>
+            {/key}
           </div>
         </div>
       </div>
 
       <button class="nav-button next-button" type="button" aria-label="Next image" onclick={(e) => { e.stopPropagation(); navigate('next'); }}>›</button>
 
-      <div class="lightbox-info">
-        <h2>{selectedItem.title}</h2>
-        {#if selectedItem.description}<p>{selectedItem.description}</p>{/if}
+      <div class="lightbox-info-window">
+        <div
+          class="lightbox-info-track"
+          class:animating={isAnimating}
+          class:dragging={isDragging}
+          style="transform: translateX(calc((-100% - {targetSlideOffset * 100}%) - {GAP_REM + (targetSlideOffset * GAP_REM)}rem + {currentTranslateX}px));"
+        >
+          {#each [items[prevIndex], items[currentIndex], items[nextIndex]] as item, index (index)}
+            <div class="lightbox-info">
+              <h2>{item.title}</h2>
+              {#if item.description}<p>{item.description}</p>{/if}
+            </div>
+          {/each}
+        </div>
       </div>
     </div>
   </div>
@@ -246,38 +300,80 @@
     position: relative;
     display: block;
     width: 100%;
-    padding: 0;
-    border: none;
     background: #eee;
-    cursor: pointer;
-    overflow: hidden;
+    overflow: visible;
     aspect-ratio: 1 / 1;
+  }
+
+  .gallery-item :global(.gallery-image) {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .gallery-item :global(.flip-button) {
+    pointer-events: auto;
+  }
+
+  .gallery-item :global(.flip-card),
+  .gallery-item :global(.face) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .gallery-item :global(.face) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .gallery-item :global(.face-front) {
+    position: relative;
   }
 
   .gallery-item :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.35s ease;
   }
 
-  .gallery-item:hover :global(img) {
-    transform: scale(1.04);
+  .gallery-open {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
   }
 
   .overlay {
     position: absolute;
+    z-index: 3;
     inset: 0;
     display: flex;
     align-items: flex-end;
     padding: 1.5rem;
     background: linear-gradient(transparent 45%, rgba(0, 0, 0, 0.7));
+    color: white;
+    font: inherit;
     opacity: 0;
     transition: opacity 0.25s ease;
+    pointer-events: none;
   }
 
   .gallery-item:hover .overlay {
     opacity: 1;
+  }
+
+  .gallery-open:focus-visible + .overlay {
+    opacity: 1;
+    outline: 3px solid white;
+    outline-offset: -0.375rem;
   }
 
   .overlay span {
@@ -389,7 +485,7 @@
     position: relative;
     max-width: 100%;
     max-height: 75vh;
-    overflow: hidden;
+    overflow: visible;
     cursor: zoom-in;
     display: flex;
     align-items: center;
@@ -405,8 +501,20 @@
     will-change: transform, transform-origin;
   }
 
+  .zoom-container :global(.face) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .zoom-container :global(.face-back) {
+    position: absolute;
+    inset: 0;
+  }
+
   .zoom-container.zoomed {
     cursor: zoom-out;
+    overflow: hidden;
   }
 
   .zoom-container.zoomed :global(img) {
@@ -414,7 +522,28 @@
     transform: scale(2.2);
   }
 
+  .lightbox-info-window {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .lightbox-info-track {
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+    will-change: transform;
+  }
+
+  .lightbox-info-track.animating {
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .lightbox-info-track.dragging {
+    transition: none;
+  }
+
   .lightbox-info {
+    flex: 0 0 100%;
     width: 100%;
     padding-top: 1.25rem;
     color: white;

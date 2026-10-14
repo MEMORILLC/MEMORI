@@ -1,15 +1,15 @@
 import { readdirSync, existsSync, unlinkSync } from 'node:fs';
 import { join, extname } from 'node:path';
-import { execFileSync } from 'node:child_process';
+import sharp from 'sharp';
 
 const root = process.cwd();
 const outputDirs = [join(root, 'build'), join(root, '.svelte-kit/output/client')];
 
-function walk(dir) {
+async function walk(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory()) {
-      walk(fullPath);
+      await walk(fullPath);
       continue;
     }
 
@@ -23,19 +23,14 @@ function walk(dir) {
 
     const webpPath = fullPath.replace(/\.(png|jpe?g)$/i, '.webp');
 
-    try {
-      execFileSync('cwebp', ['-q', '85', fullPath, '-o', webpPath], { stdio: 'inherit' });
-      console.log(`Converted ${fullPath} -> ${webpPath}`);
-      unlinkSync(fullPath);
-    } catch (error) {
-      console.error(`Failed to convert ${fullPath}:`, error.message);
-      process.exitCode = 1;
-    }
+    await sharp(fullPath).webp({ quality: 85 }).toFile(webpPath);
+    unlinkSync(fullPath);
+    console.log(`Converted ${fullPath} -> ${webpPath}`);
   }
 }
 
 for (const outputDir of outputDirs) {
   if (existsSync(outputDir)) {
-    walk(outputDir);
+    await walk(outputDir);
   }
 }
