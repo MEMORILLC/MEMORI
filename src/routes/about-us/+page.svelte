@@ -2,6 +2,7 @@
   import { resolve } from "$app/paths";
   import { site } from "$lib/data/site";
   import Seo from "$lib/components/Seo.svelte";
+  import Image from "$lib/components/Image.svelte";
 
   const values = [
     {
@@ -67,6 +68,11 @@
         physical world. No matter the occassion, we treat your story with the exact
         same care, intention, and devotion we bring to our own memories.
       </p>
+      <Image
+        src="/gallery/Robbins-13.jpg"
+        alt="The people behind Memori, smiling together outdoors."
+        class="story-image"
+      />
     </div>
   </div>
 </section>
@@ -193,6 +199,14 @@
 
   .story-text p:last-child {
     margin-bottom: 0;
+  }
+
+  :global(.story-image) {
+    display: block;
+    width: 100%;
+    margin-top: 2rem;
+    overflow: hidden;
+    border-radius: .5rem;
   }
 
   .values {
