@@ -112,7 +112,7 @@
     <header class="section-heading gallery-heading">
       <div>
         <p class="eyebrow">OUR WORK</p>
-        <h2>Take a look at what we offer.</h2>
+        <h2>Take a look at some things we have done.</h2>
       </div>
 
       <a href={resolve("/gallery")} class="text-link" aria-label="View full gallery">View full gallery →</a>
