@@ -2,15 +2,25 @@
 import adapter from "@sveltejs/adapter-cloudflare";
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
+const basePath = process.env.CUSTOM_DOMAIN ? "" : "/MEMORI";
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   preprocess: vitePreprocess(),
   kit: {
     paths: {
-      base: process.env.CUSTOM_DOMAIN ? "" : "/MEMORI",
+      base: basePath,
       relative: false
     },
-    adapter: adapter(),
+    adapter: adapter({
+      routes: {
+        exclude: [
+          "<all>",
+          `${basePath}/gallery/*.webp`,
+          `${basePath}/logos/*.webp`
+        ]
+      }
+    }),
     prerender: {
       // 👈 Advanced handler function to catch and mute the base warnings cleanly
       handleHttpError: ({ path, message }) => {
