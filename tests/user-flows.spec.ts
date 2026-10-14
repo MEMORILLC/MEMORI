@@ -102,43 +102,116 @@ test('visible images load on the main pages', async ({ page }) => {
 	}
 });
 
-test('gallery groups paired views and provides an accessible flip control', async ({ page }) => {
+test('gallery groups product views and provides accessible view navigation', async ({ page }) => {
 	await page.goto('/MEMORI/gallery');
 
 	await expect(page.locator('.gallery-item')).toHaveCount(3);
 
 	const cuttingBoardCard = page.locator('.gallery-item').filter({
-		has: page.getByRole('button', { name: 'Show back of Carved with Care' }),
+		has: page.getByRole('button', { name: 'Next view of Carved with Care' }),
 	});
 	await cuttingBoardCard.hover();
 	await expect(cuttingBoardCard.locator('.overlay')).toHaveCSS('opacity', '1');
-
-	const showBackButton = page.getByRole('button', { name: 'Show back of Carved with Care' });
-	await showBackButton.click();
+	await expect(cuttingBoardCard.locator('.overlay span')).toBeVisible();
 	await expect(
-		page.getByRole('button', { name: 'Show front of Carved with Care' }),
-	).toHaveAttribute('aria-pressed', 'true');
+		cuttingBoardCard.getByRole('button', { name: 'Next view of Carved with Care' }),
+	).toBeVisible();
+	const titleBounds = await cuttingBoardCard.locator('.overlay').boundingBox();
+	const controlsBounds = await cuttingBoardCard.locator('.view-controls').boundingBox();
+	expect(titleBounds).not.toBeNull();
+	expect(controlsBounds).not.toBeNull();
+	expect(titleBounds!.x + titleBounds!.width).toBeLessThan(controlsBounds!.x);
+
+	const mugCard = page.locator('.gallery-item').filter({
+		has: page.getByRole('button', { name: 'View Love, Laughter, and Lattes' }),
+	});
+	await mugCard.hover();
+	const mugTitleBounds = await mugCard.locator('.overlay').boundingBox();
+	expect(mugTitleBounds).not.toBeNull();
+	expect(mugTitleBounds!.width).toBeGreaterThan(titleBounds!.width);
+
+	await cuttingBoardCard.getByRole('button', { name: 'Next view of Carved with Care' }).click();
+	await expect(cuttingBoardCard.locator('img')).toHaveAttribute(
+		'alt',
+		'Back view of a personalized wooden cutting board.',
+	);
+	await expect(cuttingBoardCard.locator('.view-count')).toHaveText('2 / 2');
+	await cuttingBoardCard.getByRole('button', { name: 'Next view of Carved with Care' }).click();
+	await expect(cuttingBoardCard.locator('.view-count')).toHaveText('1 / 2');
 
 	await page.getByRole('button', { name: 'View Carved with Care' }).click();
-	const lightboxShowBackButton = page.getByRole('button', {
-		name: 'Show back of Carved with Care',
-	});
-	await lightboxShowBackButton.click();
-	await expect(
-		page.getByRole('dialog').getByRole('button', { name: 'Show front of Carved with Care' }),
-	).toHaveAttribute('aria-pressed', 'true');
+	const dialog = page.getByRole('dialog');
+	const currentSlide = dialog.locator('.slider-track .slide-wrapper').nth(1);
+	await expect(currentSlide.locator('img')).toHaveAttribute(
+		'alt',
+		'Front view of a personalized wooden cutting board.',
+	);
+	await dialog.getByRole('button', { name: 'Next view of Carved with Care' }).click();
+	await expect(currentSlide.locator('img')).toHaveAttribute(
+		'alt',
+		'Back view of a personalized wooden cutting board.',
+	);
 
 	await page.keyboard.press('ArrowRight');
-	await expect(page.getByRole('dialog').getByRole('heading', { name: 'A Recipe for Forever' })).toBeVisible();
 	await expect(
-		page.getByRole('dialog').getByRole('button', { name: 'Show back of A Recipe for Forever' }),
-	).toHaveAttribute('aria-pressed', 'false');
+		currentSlide.locator('img'),
+	).toHaveAttribute('alt', 'Front view of a personalized wooden cutting board.');
+	await expect(currentSlide.locator('.view-count')).toHaveText('1 / 2');
 
-	await page.getByRole('button', { name: 'Previous image' }).click();
-	await expect(page.getByRole('dialog').getByRole('heading', { name: 'Carved with Care' })).toBeVisible();
+	await dialog.getByRole('button', { name: 'Next image' }).focus();
+	await page.keyboard.press('Enter');
+	await expect(dialog.getByRole('heading', { name: 'A Recipe for Forever' })).toBeVisible();
 	await expect(
-		page.getByRole('dialog').getByRole('button', { name: 'Show back of Carved with Care' }),
-	).toHaveAttribute('aria-pressed', 'false');
+		dialog.locator('.slider-track .slide-wrapper').nth(1).locator('.view-count'),
+	).toHaveText('1 / 2');
+
+	await dialog.focus();
+	await page.keyboard.press('ArrowRight');
+	await expect(dialog.getByRole('heading', { name: 'Love, Laughter, and Lattes' })).toBeVisible();
+	await page.keyboard.press('ArrowLeft');
+	await expect(dialog.getByRole('heading', { name: 'A Recipe for Forever' })).toBeVisible();
+
+	await dialog.getByRole('button', { name: 'Previous image' }).click();
+	await expect(dialog.getByRole('heading', { name: 'Carved with Care' })).toBeVisible();
+	await expect(
+		dialog.locator('.slider-track .slide-wrapper').nth(1).locator('.view-count'),
+	).toHaveText('1 / 2');
+});
+
+test('gallery lightbox supports keyboard opening, focus trapping, and focus restoration', async ({ page }) => {
+	await page.goto('/MEMORI/gallery');
+
+	const openButton = page.getByRole('button', { name: 'View Carved with Care' });
+	await openButton.focus();
+	await page.keyboard.press('Enter');
+
+	const dialog = page.getByRole('dialog', { name: 'Carved with Care' });
+	await expect(dialog).toBeFocused();
+	await page.keyboard.press('Tab');
+	await expect(dialog.getByRole('button', { name: 'Close image' })).toBeFocused();
+	await page.keyboard.press('Shift+Tab');
+	await expect(dialog.getByRole('button', { name: 'Next image' })).toBeFocused();
+	await page.keyboard.press('Tab');
+	await expect(dialog.getByRole('button', { name: 'Close image' })).toBeFocused();
+	await page.keyboard.press('Tab');
+	await page.keyboard.press('Tab');
+	await page.keyboard.press('Tab');
+	await expect(
+		dialog.getByRole('button', { name: 'Next view of Carved with Care' }),
+	).toBeFocused();
+	await page.keyboard.press('ArrowRight');
+	await expect(
+		dialog.locator('.slider-track .slide-wrapper').nth(1).locator('img'),
+	).toHaveAttribute('alt', 'Back view of a personalized wooden cutting board.');
+	await expect(dialog.getByRole('heading', { name: 'Carved with Care' })).toBeVisible();
+	await page.keyboard.press('Enter');
+	await expect(
+		dialog.locator('.slider-track .slide-wrapper').nth(1).locator('img'),
+	).toHaveAttribute('alt', 'Front view of a personalized wooden cutting board.');
+
+	await page.keyboard.press('Escape');
+	await expect(dialog).toBeHidden();
+	await expect(openButton).toBeFocused();
 });
 
 test('contact form validates required fields and submits successfully', async ({ page }) => {

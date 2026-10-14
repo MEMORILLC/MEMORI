@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import type { GalleryItem } from "$lib/data/gallery";
   import Image from "$lib/components/Image.svelte";
 
@@ -6,6 +7,9 @@
 
   let selectedItem: GalleryItem | null = $state(null);
   let currentIndex = $state(-1);
+  let currentViewIndex = $state(0);
+  let lightboxElement = $state<HTMLDivElement | undefined>(undefined);
+  let openerElement: HTMLElement | null = null;
 
   let isZoomed = $state(false);
   let zoomX = $state(50);
@@ -30,28 +34,38 @@
     targetSlideOffset = 0;
   }
 
-  function openImage(item: GalleryItem) {
+  async function openImage(item: GalleryItem, event: MouseEvent) {
     if (!items.length) return;
 
-    selectedItem = item;
     currentIndex = items.findIndex((i) => i.image === item.image);
     if (currentIndex === -1) return;
 
+    openerElement = event.currentTarget as HTMLElement;
+    selectedItem = item;
+    currentViewIndex = 0;
     resetInteractionState();
     isZoomed = false;
+    await tick();
+    lightboxElement?.focus();
   }
 
-  function closeImage() {
+  async function closeImage() {
+    const opener = openerElement;
     selectedItem = null;
     currentIndex = -1;
+    currentViewIndex = 0;
     isZoomed = false;
     resetInteractionState();
+    await tick();
+    opener?.focus();
+    openerElement = null;
   }
 
   function navigate(direction: "next" | "prev") {
     if (currentIndex === -1 || isAnimating || items.length <= 1) return;
 
     isZoomed = false;
+    currentViewIndex = 0;
     isAnimating = true;
     isDragging = false;
     targetSlideOffset = direction === "next" ? 1 : -1;
@@ -74,11 +88,48 @@
   }
 
   function handleKeyDown(event: KeyboardEvent) {
-    if (currentIndex === -1 || isAnimating) return;
+    if (currentIndex === -1) return;
 
-    if (event.key === "ArrowRight") navigate("next");
-    else if (event.key === "ArrowLeft") navigate("prev");
-    else if (event.key === "Escape") closeImage();
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeImage();
+      return;
+    }
+
+    if (event.key === "Tab" && lightboxElement) {
+      const focusableElements = Array.from(
+        lightboxElement.querySelectorAll<HTMLButtonElement>("button:not(:disabled)")
+      ).filter((element) => element.getClientRects().length > 0);
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (!firstElement || !lastElement) {
+        event.preventDefault();
+      } else if (
+        !lightboxElement.contains(document.activeElement) ||
+        (event.shiftKey && document.activeElement === firstElement)
+      ) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+      return;
+    }
+
+    if (isAnimating || (event.key !== "ArrowRight" && event.key !== "ArrowLeft")) return;
+
+    const focusedViewControl =
+      event.target instanceof Element && event.target.closest(".view-controls") !== null;
+    const viewCount = (items[currentIndex]?.views?.length ?? 0) + 1;
+    if (focusedViewControl && viewCount > 1) {
+      event.preventDefault();
+      isZoomed = false;
+      currentViewIndex = (currentViewIndex + (event.key === "ArrowRight" ? 1 : -1) + viewCount) % viewCount;
+    } else {
+      navigate(event.key === "ArrowRight" ? "next" : "prev");
+    }
   }
 
   function isControlEvent(event: MouseEvent | TouchEvent) {
@@ -163,14 +214,14 @@
       <Image
         src={item.image}
         alt={item.alt}
-        back={item.back}
-        flipLabel={item.title}
+        views={item.views}
+        galleryLabel={item.title}
         class="gallery-image"
       />
       <button
         class="gallery-open"
         type="button"
-        onclick={() => openImage(item)}
+        onclick={(event) => openImage(item, event)}
         aria-label={`View ${item.title}`}
       ></button>
       <div class="overlay" aria-hidden="true">
@@ -205,7 +256,14 @@
       if (!isZoomed) handleDragEnd();
     }}
   >
-    <div class="lightbox-content" role="dialog" aria-modal="true" tabindex="-1">
+    <div
+      class="lightbox-content"
+      role="dialog"
+      aria-modal="true"
+      aria-label={selectedItem.title}
+      tabindex="-1"
+      bind:this={lightboxElement}
+    >
       <button class="close-button" type="button" aria-label="Close image" onclick={closeImage}>×</button>
 
       <button class="nav-button prev-button" type="button" aria-label="Previous image" onclick={(e) => { e.stopPropagation(); navigate('prev'); }}>‹</button>
@@ -223,8 +281,9 @@
                 <Image
                   src={items[prevIndex].image}
                   alt={items[prevIndex].alt}
-                  back={items[prevIndex].back}
-                  flipLabel={items[prevIndex].title}
+                  views={items[prevIndex].views}
+                  galleryLabel={items[prevIndex].title}
+                  controlsEnabled={false}
                   loading="lazy"
                 />
               </div>
@@ -244,8 +303,9 @@
                 <Image
                   src={items[currentIndex].image}
                   alt={items[currentIndex].alt}
-                  back={items[currentIndex].back}
-                  flipLabel={items[currentIndex].title}
+                  views={items[currentIndex].views}
+                  galleryLabel={items[currentIndex].title}
+                  bind:viewIndex={currentViewIndex}
                   loading="eager"
                 />
               </div>
@@ -258,8 +318,9 @@
                 <Image
                   src={items[nextIndex].image}
                   alt={items[nextIndex].alt}
-                  back={items[nextIndex].back}
-                  flipLabel={items[nextIndex].title}
+                  views={items[nextIndex].views}
+                  galleryLabel={items[nextIndex].title}
+                  controlsEnabled={false}
                   loading="lazy"
                 />
               </div>
@@ -305,32 +366,26 @@
     aspect-ratio: 1 / 1;
   }
 
-  .gallery-item :global(.gallery-image) {
+  .gallery-item :global(.image-frame.gallery-image) {
     position: relative;
-    z-index: 2;
     display: block;
     width: 100%;
     height: 100%;
     pointer-events: none;
   }
 
-  .gallery-item :global(.flip-button) {
-    pointer-events: auto;
+  .gallery-item :global(.view-controls) {
+    right: 1rem;
+    bottom: 1rem;
+    left: auto;
+    width: auto;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 
-  .gallery-item :global(.flip-card),
-  .gallery-item :global(.face) {
+  .gallery-item :global(.gallery-view) {
     width: 100%;
     height: 100%;
-  }
-
-  .gallery-item :global(.face) {
-    position: absolute;
-    inset: 0;
-  }
-
-  .gallery-item :global(.face-front) {
-    position: relative;
   }
 
   .gallery-item :global(img) {
@@ -354,11 +409,14 @@
   .overlay {
     position: absolute;
     z-index: 3;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 1.5rem;
-    background: linear-gradient(transparent 45%, rgba(0, 0, 0, 0.7));
+    right: auto;
+    bottom: 1rem;
+    left: 1rem;
+    width: fit-content;
+    max-width: calc(100% - 11rem);
+    padding: 0.65rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.68);
     color: white;
     font: inherit;
     opacity: 0;
@@ -373,10 +431,12 @@
   .gallery-open:focus-visible + .overlay {
     opacity: 1;
     outline: 3px solid white;
-    outline-offset: -0.375rem;
+    outline-offset: 3px;
   }
 
   .overlay span {
+    display: block;
+    overflow-wrap: anywhere;
     color: white;
     font-size: 1rem;
     font-weight: 600;
@@ -499,17 +559,6 @@
     transform-origin: var(--zoom-x, 50%) var(--zoom-y, 50%);
     transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: transform, transform-origin;
-  }
-
-  .zoom-container :global(.face) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .zoom-container :global(.face-back) {
-    position: absolute;
-    inset: 0;
   }
 
   .zoom-container.zoomed {

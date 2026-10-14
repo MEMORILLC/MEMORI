@@ -5,85 +5,74 @@
   let {
     src,
     alt,
-    back,
-    flipLabel = "image",
+    views = [],
+    galleryLabel = "image",
     loading = "lazy",
+    controlsEnabled = true,
+    viewIndex = $bindable(0),
     class: className = ""
   }: {
     src: string;
     alt: string;
-    back?: { image: string; alt: string };
-    flipLabel?: string;
+    views?: { image: string; alt: string }[];
+    galleryLabel?: string;
     loading?: "lazy" | "eager";
+    controlsEnabled?: boolean;
+    viewIndex?: number;
     class?: string;
   } = $props();
-
-  let isFlipped = $state(false);
-  let isBackReady = $state(false);
-  let preloadGeneration = 0;
 
   function getVersionedImage(image: string) {
     const displayImage = dev ? image : image.replace(/\.(png|jpe?g)$/i, ".webp");
     return `${asset(displayImage)}?v=${import.meta.env.VITE_BUILD_ID}`;
   }
 
-  let versionedImage = $derived(getVersionedImage(src));
-  let versionedBackImage = $derived(back ? getVersionedImage(back.image) : undefined);
+  let allViews = $derived([{ image: src, alt }, ...views]);
+  let currentView = $derived(allViews[viewIndex] ?? allViews[0]);
+  let versionedImage = $derived(getVersionedImage(currentView.image));
 
   $effect(() => {
-    const imageUrl = versionedBackImage;
-    const label = flipLabel;
-    const generation = ++preloadGeneration;
-    isBackReady = !imageUrl;
+    if (allViews.length <= 1) return;
 
-    if (!imageUrl) return;
-    const preloadedImage = new window.Image();
-    preloadedImage.src = imageUrl;
-    preloadedImage.decode().then(
-      () => {
-        if (generation === preloadGeneration) isBackReady = true;
-      },
-      (error: unknown) => {
-        console.error(`Failed to preload the back image for "${label}".`, error);
-      }
-    );
+    for (const view of allViews.slice(1)) {
+      const preloadedImage = new window.Image();
+      preloadedImage.src = getVersionedImage(view.image);
+      preloadedImage.decode().catch((error: unknown) => {
+        console.error(`Failed to preload a gallery view for "${galleryLabel}".`, error);
+      });
+    }
   });
+
+  function navigateView(direction: "next" | "prev", event: MouseEvent) {
+    event.stopPropagation();
+    viewIndex = (viewIndex + (direction === "next" ? 1 : -1) + allViews.length) % allViews.length;
+  }
 </script>
 
 <span class="image-frame {className}">
-  <span class="flip-card" class:flipped={isFlipped}>
-    <picture class="face face-front" aria-hidden={isFlipped}>
-      {#if !dev}
-        <source srcset={versionedImage} type="image/webp" />
-      {/if}
-      <img src={versionedImage} {alt} {loading} decoding="async" class={className} />
-    </picture>
-
-    {#if back && versionedBackImage}
-      <picture class="face face-back" aria-hidden={!isFlipped}>
-        {#if !dev}
-          <source srcset={versionedBackImage} type="image/webp" />
-        {/if}
-        <img src={versionedBackImage} alt={back.alt} {loading} decoding="async" class={className} />
-      </picture>
-
+  <picture class="gallery-view">
+    {#if !dev}
+      <source srcset={versionedImage} type="image/webp" />
     {/if}
-  </span>
+    <img src={versionedImage} alt={currentView.alt} {loading} decoding="async" class={className} />
+  </picture>
 
-  {#if back}
-    <button
-      class="flip-button"
-      type="button"
-      aria-label={isFlipped ? `Show front of ${flipLabel}` : `Show back of ${flipLabel}`}
-      aria-pressed={isFlipped}
-      disabled={!isBackReady}
-      onclick={(event) => {
-        event.stopPropagation();
-        isFlipped = !isFlipped;
-      }}
-    >
-      Flip
-    </button>
+  {#if controlsEnabled && allViews.length > 1}
+    <div class="view-controls" role="group" aria-label={`Views of ${galleryLabel}`}>
+      <button
+        class="view-button previous-view"
+        type="button"
+        aria-label={`Previous view of ${galleryLabel}`}
+        onclick={(event) => navigateView("prev", event)}
+      >‹</button>
+      <span class="view-count" aria-live="polite">{viewIndex + 1} / {allViews.length}</span>
+      <button
+        class="view-button next-view"
+        type="button"
+        aria-label={`Next view of ${galleryLabel}`}
+        onclick={(event) => navigateView("next", event)}
+      >›</button>
+    </div>
   {/if}
 </span>
 
@@ -91,42 +80,28 @@
   .image-frame {
     position: relative;
     display: inline-block;
-    perspective: 75rem;
     vertical-align: middle;
   }
 
-  .flip-card {
+  .gallery-view {
     position: relative;
     display: block;
-    transform-style: preserve-3d;
-    transition: transform 700ms cubic-bezier(0.65, 0, 0.35, 1);
-    will-change: transform;
   }
 
-  .flip-card.flipped {
-    transform: rotateY(180deg);
-  }
-
-  .face {
+  .view-controls {
+    position: absolute;
+    z-index: 4;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    justify-content: space-between;
+    pointer-events: none;
   }
 
-  .face-back {
-    position: absolute;
-    inset: 0;
-    transform: rotateY(180deg);
-  }
-
-  .flip-button {
-    position: absolute;
-    z-index: 1;
-    top: 0.75rem;
-    right: 0.75rem;
-    padding: 0.45rem 0.75rem;
+  .view-button,
+  .view-count {
     border: 1px solid rgba(255, 255, 255, 0.7);
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.68);
@@ -134,25 +109,28 @@
     font: inherit;
     font-size: 0.8rem;
     font-weight: 600;
-    cursor: pointer;
   }
 
-  .flip-button:hover {
+  .view-button {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    place-items: center;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .view-count {
+    padding: 0.35rem 0.65rem;
+  }
+
+  .view-button:hover {
     background: rgba(0, 0, 0, 0.88);
   }
 
-  .flip-button:disabled {
-    cursor: wait;
-  }
-
-  .flip-button:focus-visible {
+  .view-button:focus-visible {
     outline: 3px solid white;
     outline-offset: 3px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .flip-card {
-      transition-duration: 0.01ms;
-    }
   }
 </style>
