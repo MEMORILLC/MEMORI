@@ -36,8 +36,6 @@ Submit the sitemap URL to Google Search Console after verifying the site there.
 
 - Node.js 22 or newer
 - npm
-- `cwebp` from the WebP tools package for production image conversion and the
-  Playwright preview tests
 
 Install dependencies:
 
@@ -75,8 +73,8 @@ npm run build
 ```
 
 The generated site is written to `build/`. The `npm run build:webp` command
-builds the site and converts supported PNG/JPEG images to WebP; it requires
-`cwebp` to be installed. To preview the converted production build:
+builds the site and converts supported PNG/JPEG images to WebP using the
+project's `sharp` dependency. To preview the converted production build:
 
 ```sh
 npm run build:webp
