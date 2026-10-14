@@ -10,13 +10,7 @@ const config = {
       base: process.env.CUSTOM_DOMAIN ? "" : "/MEMORI",
       relative: false
     },
-    adapter: adapter({
-      pages: "build",
-      assets: "build",
-      fallback: "404.html",
-      precompress: false,
-      strict: true,
-    }),
+    adapter: adapter(),
     prerender: {
       // 👈 Advanced handler function to catch and mute the base warnings cleanly
       handleHttpError: ({ path, message }) => {

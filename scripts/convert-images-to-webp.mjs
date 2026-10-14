@@ -3,7 +3,11 @@ import { join, extname } from 'node:path';
 import sharp from 'sharp';
 
 const root = process.cwd();
-const outputDirs = [join(root, 'build'), join(root, '.svelte-kit/output/client')];
+const outputDirs = [
+  join(root, '.svelte-kit/cloudflare'),
+  join(root, 'build'),
+  join(root, '.svelte-kit/output/client')
+];
 
 async function walk(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
