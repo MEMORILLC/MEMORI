@@ -17,7 +17,7 @@
 		<h1>Gallery</h1>
 
 		<p class="intro">
-			Take a look at some of our products and work.
+			Take a look at some things we have done.
 		</p>
 	</header>
 
