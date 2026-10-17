@@ -59,15 +59,10 @@
   <div class="section-inner about-grid">
     <header>
       <p class="eyebrow">ABOUT US</p>
-      <h2>A company built around quality.</h2>
+      <h2>A company built around you and your moments.</h2>
     </header>
 
     <div class="about-text">
-      <p>
-        {site.companyName} is dedicated to providing quality products and personalized
-        service to our customers.
-      </p>
-
       <p>
         We believe that life's most beautiful moments deserve to be held. From preserving
         a cherished memory to celebrating a new milestone, we craft personalized physical 
