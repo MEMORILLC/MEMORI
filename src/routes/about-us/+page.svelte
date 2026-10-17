@@ -46,7 +46,7 @@
   <div class="section-inner story-grid">
     <header class="section-heading">
       <p class="eyebrow">OUR STORY</p>
-      <h2>A company built around quality.</h2>
+      <h2>A company built around you and your moments.</h2>
     </header>
 
     <div class="story-text">
