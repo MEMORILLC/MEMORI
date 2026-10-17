@@ -13,7 +13,7 @@
     {
       title: "Design & Personalization",
       description:
-        "Every project is uniquely yours. We meticulously draft concepts, select premium materials, and fine-tune the details to make sure the final product aligns perfectly with your expectations.",
+        "Every project is uniquely yours. We meticulously draft concepts, select materials, and fine-tune the details to make sure the final product aligns perfectly with your expectations.",
     },
     {
       title: "Meticulous Craftsmanship",
